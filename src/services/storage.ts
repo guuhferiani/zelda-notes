@@ -1,6 +1,8 @@
 import { Note, NeonConfig } from '../types';
 import { neon } from '@neondatabase/serverless';
 
+declare const __VITE_DATABASE_URL__: string | undefined;
+
 const STORAGE_KEYS = {
   NOTES: 'zelda_notes_list',
   SKULLTULAS: 'zelda_skulltulas_status',
@@ -10,7 +12,12 @@ const STORAGE_KEYS = {
   NEON_CONFIG: 'zelda_neon_config'
 };
 
-const DEFAULT_NEON_URL = 'postgresql://neondb_owner:npg_HqCMGbyv73jx@ep-weathered-waterfall-b6vbjwxh-pooler.c-2.sa-east-1.aws.neon.tech/neondb?sslmode=require';
+const ENV_NEON_URL = (typeof __VITE_DATABASE_URL__ !== 'undefined' && __VITE_DATABASE_URL__)
+  ? __VITE_DATABASE_URL__
+  : ((import.meta as any).env?.VITE_DATABASE_URL || '');
+
+const DEFAULT_NEON_URL = ENV_NEON_URL || 'postgresql://neondb_owner:npg_HqCMGbyv73jx@ep-weathered-waterfall-b6vbjwxh-pooler.c-2.sa-east-1.aws.neon.tech/neondb?sslmode=require';
+
 
 export class StorageService {
   // ---- Configuração do Neon DB ----
