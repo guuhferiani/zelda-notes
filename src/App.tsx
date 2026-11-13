@@ -28,13 +28,25 @@ export function App() {
   const [neonConfig, setNeonConfig] = useState<NeonConfig>(StorageService.getNeonConfig());
   const [isNeonModalOpen, setIsNeonModalOpen] = useState(false);
 
-  // Carrega dados locais ao iniciar
+  // Carrega dados locais ao iniciar e hidrata da nuvem Neon DB
   useEffect(() => {
+    // 1. Carga imediata do cache local
     setNotes(StorageService.getNotes());
     setCollectedSkulltulas(StorageService.getCollectedSkulltulas());
     setCollectedHearts(StorageService.getCollectedHeartPieces());
     setLearnedSongs(StorageService.getLearnedSongs());
     setCompletedEvents(StorageService.getCompletedEvents());
+
+    // 2. Hidratação em tempo real com o Neon PostgreSQL na nuvem
+    StorageService.fetchCloudData().then((cloudData) => {
+      if (cloudData) {
+        if (cloudData.notes.length > 0) setNotes(cloudData.notes);
+        if (cloudData.skulltulas.length > 0) setCollectedSkulltulas(cloudData.skulltulas);
+        if (cloudData.hearts.length > 0) setCollectedHearts(cloudData.hearts);
+        if (cloudData.songs.length > 0) setLearnedSongs(cloudData.songs);
+        if (cloudData.events.length > 0) setCompletedEvents(cloudData.events);
+      }
+    });
 
     // Se conecta ao listener do jogo ao vivo
     const unsubscribe = GameSyncService.subscribe((state) => {
@@ -79,6 +91,15 @@ export function App() {
   const handleSaveNeonConfig = (newConfig: NeonConfig) => {
     StorageService.setNeonConfig(newConfig);
     setNeonConfig(newConfig);
+    StorageService.fetchCloudData().then((cloudData) => {
+      if (cloudData) {
+        setNotes(cloudData.notes);
+        setCollectedSkulltulas(cloudData.skulltulas);
+        setCollectedHearts(cloudData.hearts);
+        setLearnedSongs(cloudData.songs);
+        setCompletedEvents(cloudData.events);
+      }
+    });
   };
 
   return (

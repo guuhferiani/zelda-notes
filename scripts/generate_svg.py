@@ -44,3 +44,4 @@ with open('C:/Users/Gustavo/Documents/Projetos Antigravity/Zelda Ocarina/ZeldaNo
     f.write(svg_content)
 
 print('Generated public/favicon.svg successfully!')
+
