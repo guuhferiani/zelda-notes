@@ -27,7 +27,8 @@ export default {
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
-        hylian: ['Cinzel', 'Trajan Pro', 'serif']
+        hylian: ['Cinzel', 'Trajan Pro', 'serif'],
+        zelda: ['Triforce', 'Cinzel', 'serif']
       },
       boxShadow: {
         'glow-green': '0 0 15px -3px rgba(16, 185, 129, 0.4)',

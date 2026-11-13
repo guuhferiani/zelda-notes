@@ -50,7 +50,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             >
               <div className="relative w-10 h-10 rounded-xl bg-gradient-to-br from-sheikah-gold/30 via-sheikah-card to-sheikah-kokiri/20 p-0.5 shadow-[0_0_15px_-3px_rgba(234,179,8,0.3)] group-hover:shadow-glow-gold transition-all duration-300">
                 <img 
-                  src="/icon.png" 
+                  src="/favicon.svg" 
                   alt="Zelda Notes Emblem" 
                   className="w-full h-full object-cover rounded-[10px]" 
                 />
