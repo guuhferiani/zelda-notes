@@ -141,3 +141,4 @@ export const SKULLTULAS_DATA: SkulltulaItem[] = [
   { id: 99, region: 'Spirit Temple', location: 'Na grande sala da estátua colosso de pedra (lado adulto)', requirement: 'Song of Time + Longshot', timeOfDay: 'both', linkAge: 'adult' },
   { id: 100, region: 'Spirit Temple', location: 'Sala dos espelhos móveis de luz (lado adulto)', requirement: 'Longshot', timeOfDay: 'both', linkAge: 'adult' }
 ];
+

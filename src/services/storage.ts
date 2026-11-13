@@ -10,21 +10,28 @@ const STORAGE_KEYS = {
   NEON_CONFIG: 'zelda_neon_config'
 };
 
+const DEFAULT_NEON_URL = 'postgresql://neondb_owner:npg_HqCMGbyv73jx@ep-weathered-waterfall-b6vbjwxh-pooler.c-2.sa-east-1.aws.neon.tech/neondb?sslmode=require';
+
 export class StorageService {
   // ---- Configuração do Neon DB ----
   static getNeonConfig(): NeonConfig {
     const raw = localStorage.getItem(STORAGE_KEYS.NEON_CONFIG);
     if (!raw) {
       return {
-        databaseUrl: '',
-        isEnabled: false,
-        lastSyncAt: null
+        databaseUrl: DEFAULT_NEON_URL,
+        isEnabled: true,
+        lastSyncAt: new Date().toISOString()
       };
     }
     try {
-      return JSON.parse(raw);
+      const parsed = JSON.parse(raw);
+      if (!parsed.databaseUrl) {
+        parsed.databaseUrl = DEFAULT_NEON_URL;
+        parsed.isEnabled = true;
+      }
+      return parsed;
     } catch {
-      return { databaseUrl: '', isEnabled: false, lastSyncAt: null };
+      return { databaseUrl: DEFAULT_NEON_URL, isEnabled: true, lastSyncAt: null };
     }
   }
 
@@ -211,3 +218,4 @@ export class StorageService {
     return list;
   }
 }
+

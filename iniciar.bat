@@ -10,3 +10,4 @@ start /b npm run bridge
 echo.
 echo [2/2] Abrindo Web App no navegador...
 npm run dev
+

@@ -107,3 +107,4 @@ O aplicativo abrirá automaticamente no seu navegador em: **`http://localhost:30
 Desenvolvido para acompanhar a jornada do Herói do Tempo em **The Legend of Zelda: Ocarina of Time**.
 
 </div>
+

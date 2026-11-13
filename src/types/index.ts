@@ -77,3 +77,4 @@ export interface NeonConfig {
   isEnabled: boolean;
   lastSyncAt: string | null;
 }
+

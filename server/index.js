@@ -170,3 +170,4 @@ server.listen(PORT, () => {
   console.log(`[Zelda Notes Bridge] Servidor rodando na porta http://localhost:${PORT}`);
   console.log(`[Zelda Notes Bridge] Monitorando pasta de saves em: ${DEFAULT_SAVE_ROOT}`);
 });
+

@@ -57,3 +57,4 @@ export const HEART_PIECES_DATA: HeartPieceItem[] = [
   { id: 35, region: 'Gerudo Valley', location: 'Atrás da cachoeira no fundo do abismo', requirement: 'Cucco ou cair na água', linkAge: 'both', description: 'Desça até o rio lá embaixo e nade atrás da cachoeira até a escada secreta.' },
   { id: 36, region: 'Desert Colossus', location: 'Topo do Arco de Pedra do Colosso', requirement: 'Magic Bean', linkAge: 'adult', description: 'Voe na planta de feijão mágico até o arco de pedra sobre a entrada do templo.' }
 ];
+

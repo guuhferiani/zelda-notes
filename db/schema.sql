@@ -72,3 +72,4 @@ CREATE TABLE IF NOT EXISTS game_snapshots (
 CREATE INDEX IF NOT EXISTS idx_journal_notes_profile ON journal_notes(profile_id, slot_id);
 CREATE INDEX IF NOT EXISTS idx_skulltulas_profile ON skulltulas_progress(profile_id, slot_id);
 CREATE INDEX IF NOT EXISTS idx_snapshots_profile ON game_snapshots(profile_id, created_at DESC);
+
