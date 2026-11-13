@@ -5,10 +5,10 @@ import {
   Heart, 
   Music, 
   Bug, 
-  Database, 
-  Radio, 
   Sparkles,
-  ShieldAlert
+  Settings,
+  CloudCheck,
+  Radio
 } from 'lucide-react';
 import { LiveGameState, NeonConfig } from '../types';
 
@@ -28,94 +28,126 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenNeonModal
 }) => {
   const tabs = [
-    { id: 'dashboard', label: 'Painel', icon: Sparkles },
-    { id: 'journal', label: 'Diário de Bordo', icon: Scroll },
-    { id: 'skulltulas', label: 'Skulltulas (100)', icon: Bug },
-    { id: 'hearts', label: 'Corações (36)', icon: Heart },
-    { id: 'songs', label: 'Canções', icon: Music },
-    { id: 'timeline', label: 'Linha do Tempo', icon: MapPin }
+    { id: 'dashboard', label: 'Painel', shortLabel: 'Início', icon: Sparkles },
+    { id: 'journal', label: 'Diário de Bordo', shortLabel: 'Diário', icon: Scroll },
+    { id: 'skulltulas', label: 'Skulltulas', shortLabel: 'Skulltulas', icon: Bug, count: '100' },
+    { id: 'hearts', label: 'Corações', shortLabel: 'Corações', icon: Heart, count: '36' },
+    { id: 'songs', label: 'Canções', shortLabel: 'Canções', icon: Music, count: '12' },
+    { id: 'timeline', label: 'Linha do Tempo', shortLabel: 'História', icon: MapPin }
   ];
 
   return (
-    <header className="sticky top-0 z-40 bg-sheikah-dark/95 backdrop-blur-md border-b border-sheikah-border shadow-lg">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          
-          {/* Logo & Título */}
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-sheikah-kokiri to-sheikah-card p-0.5 shadow-glow-green flex items-center justify-center">
-              <img src="/icon.png" alt="Zelda Logo" className="w-full h-full object-cover rounded-[10px]" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="font-hylian text-lg font-bold tracking-wider text-sheikah-gold uppercase">
-                  Zelda Notes
-                </span>
-                <span className="text-[10px] uppercase font-semibold bg-sheikah-border px-1.5 py-0.5 rounded text-sheikah-kokiri border border-sheikah-kokiri/30">
-                  Switch 2 & PC
-                </span>
-              </div>
-              <p className="text-xs text-gray-400">Companion de Ocarina of Time</p>
-            </div>
-          </div>
-
-          {/* Abas de Navegação (Desktop) */}
-          <nav className="hidden md:flex space-x-1 lg:space-x-2">
-            {tabs.map((tab) => {
-              const Icon = tab.icon;
-              const isActive = activeTab === tab.id;
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all ${
-                    isActive
-                      ? 'bg-sheikah-card text-sheikah-gold border border-sheikah-gold/40 shadow-glow-gold'
-                      : 'text-gray-400 hover:text-gray-200 hover:bg-sheikah-card/50'
-                  }`}
-                >
-                  <Icon className={`w-4 h-4 ${isActive ? 'text-sheikah-gold' : 'text-gray-400'}`} />
-                  <span>{tab.label}</span>
-                </button>
-              );
-            })}
-          </nav>
-
-          {/* Status de Conexão com Jogo & Neon DB */}
-          <div className="flex items-center gap-2 sm:gap-3">
+    <>
+      {/* ================= HEADER SUPERIOR (DESKTOP & MOBILE) ================= */}
+      <header className="sticky top-0 z-40 bg-sheikah-darkest/90 backdrop-blur-xl border-b border-sheikah-border/80 shadow-md">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
             
-            {/* Status do Jogo / Bridge */}
+            {/* Logo & Identidade do App */}
             <div 
-              title={gameState.connected ? 'Conectado ao Hookshot / Jogo Local' : 'Bridge Local Offline (Modo Consulta)'}
-              className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border transition-colors ${
-                gameState.connected 
-                  ? 'bg-emerald-950/60 text-emerald-300 border-emerald-500/50' 
-                  : 'bg-zinc-900 text-zinc-400 border-zinc-700/60'
-              }`}
+              onClick={() => setActiveTab('dashboard')} 
+              className="flex items-center gap-3 cursor-pointer group select-none"
             >
-              <Radio className={`w-3.5 h-3.5 ${gameState.connected ? 'text-emerald-400 animate-pulse' : 'text-zinc-500'}`} />
-              <span className="hidden sm:inline">{gameState.connected ? 'Jogo Ao Vivo' : 'Modo Offline'}</span>
+              <div className="relative w-10 h-10 rounded-xl bg-gradient-to-br from-sheikah-gold/30 via-sheikah-card to-sheikah-kokiri/20 p-0.5 shadow-[0_0_15px_-3px_rgba(234,179,8,0.3)] group-hover:shadow-glow-gold transition-all duration-300">
+                <img 
+                  src="/icon.png" 
+                  alt="Zelda Notes Emblem" 
+                  className="w-full h-full object-cover rounded-[10px]" 
+                />
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="font-hylian text-base sm:text-lg font-bold tracking-wider bg-gradient-to-r from-amber-200 via-sheikah-gold to-yellow-500 bg-clip-text text-transparent uppercase">
+                    Zelda Notes
+                  </span>
+                  <span className="text-[10px] tracking-wider uppercase font-semibold bg-sheikah-card text-emerald-400 px-2 py-0.5 rounded-full border border-emerald-500/30">
+                    OoT
+                  </span>
+                </div>
+                <p className="text-[11px] text-zinc-400 font-medium hidden sm:block">
+                  Nintendo Companion • Hyrule Journal
+                </p>
+              </div>
             </div>
 
-            {/* Botão de Conexão Neon DB */}
-            <button
-              onClick={onOpenNeonModal}
-              title={neonConfig.isEnabled ? 'Neon DB Conectado e Sincronizando' : 'Configurar Neon DB na Nuvem'}
-              className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border transition-all ${
-                neonConfig.isEnabled
-                  ? 'bg-amber-950/50 text-amber-300 border-amber-500/50 hover:bg-amber-900/50 shadow-glow-gold'
-                  : 'bg-zinc-900 text-zinc-400 border-zinc-700/60 hover:text-zinc-200 hover:border-zinc-500'
-              }`}
-            >
-              <Database className={`w-3.5 h-3.5 ${neonConfig.isEnabled ? 'text-amber-400' : 'text-zinc-400'}`} />
-              <span className="hidden sm:inline">Neon DB</span>
-            </button>
+            {/* Abas de Navegação Centrais (Apenas Desktop / Tablets Grandes) */}
+            <nav className="hidden md:flex items-center gap-1 lg:gap-1.5 bg-sheikah-dark/80 p-1 rounded-xl border border-sheikah-border/60">
+              {tabs.map((tab) => {
+                const Icon = tab.icon;
+                const isActive = activeTab === tab.id;
+                return (
+                  <button
+                    key={tab.id}
+                    onClick={() => setActiveTab(tab.id)}
+                    className={`relative flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 ${
+                      isActive
+                        ? 'bg-gradient-to-b from-sheikah-card to-sheikah-dark text-sheikah-gold border border-sheikah-gold/40 shadow-[0_0_15px_-4px_rgba(234,179,8,0.3)]'
+                        : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/40'
+                    }`}
+                  >
+                    <Icon className={`w-3.5 h-3.5 transition-colors ${isActive ? 'text-sheikah-gold' : 'text-zinc-400'}`} />
+                    <span>{tab.label}</span>
+                    {tab.count && (
+                      <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono ${
+                        isActive ? 'bg-amber-500/20 text-amber-300' : 'bg-zinc-800 text-zinc-400'
+                      }`}>
+                        {tab.count}
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
+            </nav>
+
+            {/* Ações / Status Discreto do Header */}
+            <div className="flex items-center gap-2 sm:gap-3">
+              
+              {/* Indicador Elegante de Sincronização / Nuvem */}
+              <div 
+                title={neonConfig.isEnabled ? 'Sincronização em nuvem ativa com Neon PostgreSQL' : 'Armazenamento local'}
+                className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-sheikah-card/60 border border-sheikah-border text-xs text-zinc-300 select-none"
+              >
+                <span className="relative flex h-2 w-2">
+                  <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${
+                    neonConfig.isEnabled ? 'bg-emerald-400' : 'bg-zinc-500'
+                  }`} />
+                  <span className={`relative inline-flex rounded-full h-2 w-2 ${
+                    neonConfig.isEnabled ? 'bg-emerald-500' : 'bg-zinc-500'
+                  }`} />
+                </span>
+                <span className="hidden sm:inline text-[11px] font-medium text-zinc-300">
+                  {neonConfig.isEnabled ? 'Nuvem Ativa' : 'Local'}
+                </span>
+                {gameState.connected && (
+                  <span className="hidden lg:inline text-[10px] text-emerald-400 font-semibold border-l border-zinc-700 pl-1.5">
+                    🎮 Jogo Conectado
+                  </span>
+                )}
+              </div>
+
+              {/* Botão de Configurações / Nuvem */}
+              <button
+                onClick={onOpenNeonModal}
+                title="Configurações & Conexão com Nuvem"
+                className="p-2 rounded-xl text-zinc-400 hover:text-white bg-sheikah-card/60 hover:bg-sheikah-card border border-sheikah-border hover:border-zinc-600 transition-all active:scale-95"
+                aria-label="Configurações de Nuvem"
+              >
+                <Settings className="w-4 h-4" />
+              </button>
+
+            </div>
 
           </div>
         </div>
+      </header>
 
-        {/* Abas Móveis (Mobile Scroll) */}
-        <div className="md:hidden flex overflow-x-auto py-2 space-x-1 no-scrollbar border-t border-sheikah-border/50">
+      {/* ================= BOTTOM NAVIGATION BAR (DOCK MÓVEL / APP STYLE) ================= */}
+      {/* Barra de navegação inferior estilo Switch Online / Sheikah Slate */}
+      <nav 
+        aria-label="Navegação Principal Móvel"
+        className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-sheikah-darkest/95 backdrop-blur-2xl border-t border-sheikah-border/80 shadow-[0_-10px_25px_-5px_rgba(0,0,0,0.8)] pb-[max(0.5rem,env(safe-area-inset-bottom))]"
+      >
+        <div className="grid grid-cols-6 h-14 max-w-md mx-auto px-1">
           {tabs.map((tab) => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;
@@ -123,21 +155,29 @@ export const Navbar: React.FC<NavbarProps> = ({
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium whitespace-nowrap transition-all ${
-                  isActive
-                    ? 'bg-sheikah-card text-sheikah-gold border border-sheikah-gold/40'
-                    : 'text-gray-400 hover:text-gray-200'
+                className={`relative flex flex-col items-center justify-center py-1 transition-all active:scale-90 ${
+                  isActive ? 'text-sheikah-gold' : 'text-zinc-500 hover:text-zinc-300'
                 }`}
               >
-                <Icon className="w-3.5 h-3.5" />
-                <span>{tab.label}</span>
+                {/* Indicador de Barra Superior Ativa Sheikah */}
+                {isActive && (
+                  <span className="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-[2.5px] bg-sheikah-gold shadow-[0_0_8px_#f59e0b] rounded-full" />
+                )}
+
+                <div className={`p-1 rounded-lg transition-transform ${isActive ? 'scale-110' : ''}`}>
+                  <Icon className={`w-5 h-5 ${isActive ? 'text-sheikah-gold drop-shadow-[0_0_8px_rgba(245,158,11,0.5)]' : 'text-zinc-400'}`} />
+                </div>
+
+                <span className={`text-[9px] font-semibold tracking-tight transition-colors ${
+                  isActive ? 'text-sheikah-gold' : 'text-zinc-400'
+                }`}>
+                  {tab.shortLabel}
+                </span>
               </button>
             );
           })}
         </div>
-
-      </div>
-    </header>
+      </nav>
+    </>
   );
 };
-

@@ -94,7 +94,7 @@ export function App() {
       />
 
       {/* Conteúdo Principal */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-5 pb-24 md:pb-8">
         {activeTab === 'dashboard' && (
           <Dashboard
             gameState={gameState}
@@ -151,8 +151,8 @@ export function App() {
         )}
       </main>
 
-      {/* Rodapé */}
-      <footer className="border-t border-sheikah-border/50 bg-sheikah-dark/80 py-4 text-center text-xs text-gray-500">
+      {/* Rodapé (visível no desktop; no mobile o dock inferior assume a navegação) */}
+      <footer className="hidden md:block border-t border-sheikah-border/50 bg-sheikah-dark/80 py-4 text-center text-xs text-gray-500">
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
           <p>Zelda Notes — Companion App de The Legend of Zelda: Ocarina of Time (Switch 2 & PC)</p>
           <p className="text-gray-400">

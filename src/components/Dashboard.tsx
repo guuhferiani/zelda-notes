@@ -10,7 +10,10 @@ import {
   Clock, 
   CheckCircle2, 
   ArrowRight,
-  Database
+  Database,
+  Trophy,
+  Settings,
+  ShieldCheck
 } from 'lucide-react';
 import { LiveGameState, Note } from '../types';
 
@@ -247,38 +250,63 @@ export const Dashboard: React.FC<DashboardProps> = ({
           )}
         </div>
 
-        {/* Card do Neon DB Cloud */}
-        <div className="bg-sheikah-card border border-sheikah-border rounded-xl p-5 flex flex-col justify-between">
+        {/* Card de Progresso Geral da Aventura & Status Sheikah */}
+        <div className="bg-sheikah-card border border-sheikah-border rounded-xl p-5 flex flex-col justify-between shadow-md">
           <div>
-            <div className="flex items-center gap-2 text-sheikah-gold mb-2">
-              <Database className="w-5 h-5" />
-              <h3 className="font-bold text-base font-hylian">Neon PostgreSQL</h3>
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2 text-sheikah-gold">
+                <Trophy className="w-5 h-5 text-sheikah-gold" />
+                <h3 className="font-bold text-base font-hylian">Conclusão 100%</h3>
+              </div>
+              <span className="text-xs font-mono font-bold px-2 py-0.5 rounded-full bg-sheikah-gold/20 text-sheikah-gold border border-sheikah-gold/40">
+                {Math.round(((collectedSkulltulasCount + collectedHeartsCount + learnedSongsCount + completedEventsCount) / 164) * 100)}%
+              </span>
             </div>
+
             <p className="text-xs text-gray-300 leading-relaxed">
-              Conecte seu banco de dados serverless no **Neon** para manter suas notas, progresso de Skulltulas e histórico salvos na nuvem e acessíveis pelo celular.
+              Acompanhamento total de coletáveis, segredos e marcos da jornada em Hyrule.
             </p>
 
-            <div className="mt-4 p-3 rounded-lg bg-sheikah-darkest/80 border border-sheikah-border/60 text-xs">
-              <div className="flex items-center justify-between mb-1">
-                <span className="text-gray-400">Status da Nuvem:</span>
-                <span className={`font-semibold ${isNeonEnabled ? 'text-amber-400' : 'text-zinc-500'}`}>
-                  {isNeonEnabled ? '● Conectado' : '○ Modo Local'}
-                </span>
+            {/* Barra Geral de Progresso */}
+            <div className="mt-3">
+              <div className="w-full bg-zinc-800 rounded-full h-2 overflow-hidden">
+                <div 
+                  className="bg-gradient-to-r from-sheikah-kokiri via-sheikah-gold to-yellow-400 h-2 rounded-full transition-all duration-700"
+                  style={{ 
+                    width: `${Math.min(100, Math.round(((collectedSkulltulasCount + collectedHeartsCount + learnedSongsCount + completedEventsCount) / 164) * 100))}%` 
+                  }}
+                />
               </div>
-              <p className="text-[11px] text-gray-400">
-                {isNeonEnabled 
-                  ? 'Sincronização bidirecional ativa.' 
-                  : 'Seus dados estão seguros no armazenamento local do navegador.'}
+              <div className="flex items-center justify-between text-[11px] text-gray-400 mt-1.5 font-mono">
+                <span>{collectedSkulltulasCount + collectedHeartsCount + learnedSongsCount + completedEventsCount} de 164 itens</span>
+                <span>Restam {164 - (collectedSkulltulasCount + collectedHeartsCount + learnedSongsCount + completedEventsCount)}</span>
+              </div>
+            </div>
+
+            {/* Status da Nuvem discreto */}
+            <div className="mt-4 p-3 rounded-lg bg-sheikah-darkest/80 border border-sheikah-border/60 text-xs">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-1.5">
+                  <span className="relative flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+                  </span>
+                  <span className="font-semibold text-gray-200">Sincronização Neon</span>
+                </div>
+                <span className="text-[11px] font-medium text-emerald-400">Ativa</span>
+              </div>
+              <p className="text-[11px] text-gray-400 mt-1">
+                Seus registros estão salvos com redundância na nuvem (AWS SP).
               </p>
             </div>
           </div>
 
           <button
             onClick={onOpenNeonModal}
-            className="mt-4 w-full py-2 px-3 rounded-lg text-xs font-semibold bg-sheikah-gold/20 hover:bg-sheikah-gold/30 text-sheikah-gold border border-sheikah-gold/40 transition-colors flex items-center justify-center gap-1.5"
+            className="mt-4 w-full py-2 px-3 rounded-lg text-xs font-semibold bg-sheikah-card hover:bg-zinc-800 text-gray-300 hover:text-white border border-sheikah-border/80 hover:border-zinc-600 transition-colors flex items-center justify-center gap-1.5"
           >
-            <Database className="w-3.5 h-3.5" />
-            <span>{isNeonEnabled ? 'Gerenciar Conexão Neon' : 'Configurar Neon DB'}</span>
+            <Settings className="w-3.5 h-3.5" />
+            <span>Configurações & Backup</span>
           </button>
         </div>
 
