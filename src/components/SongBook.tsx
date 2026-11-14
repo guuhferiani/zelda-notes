@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Music, CheckCircle2, Circle, Play, Volume2 } from 'lucide-react';
 import { OcarinaSong } from '../types';
 
@@ -31,29 +31,114 @@ export const SongBook: React.FC<SongBookProps> = ({
   onToggle
 }) => {
   const [playingSongId, setPlayingSongId] = useState<string | null>(null);
+  const audioCtxRef = useRef<AudioContext | null>(null);
 
-  // Sintetizador Web Audio API para tocar as notas da Ocarina
-  const playNote = (button: string, duration = 0.3) => {
+  const getAudioContext = (): AudioContext | null => {
     try {
-      const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-
-      const freq = BUTTON_TO_PITCH[button] || 440;
-      osc.type = 'triangle'; // Som suave similar a ocarina/flauta
-      osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-
-      gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
-
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-
-      osc.start();
-      osc.stop(audioCtx.currentTime + duration);
+      if (!audioCtxRef.current) {
+        const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
+        audioCtxRef.current = new AudioCtx();
+      }
+      if (audioCtxRef.current.state === 'suspended') {
+        audioCtxRef.current.resume();
+      }
+      return audioCtxRef.current;
     } catch {
-      // AudioContext bloqueado antes do primeiro clique
+      return null;
     }
+  };
+
+  // Sintetizador acústico realista de Ocarina (ressoador de Helmholtz + vibrato + sopro)
+  const playNote = (button: string, duration = 0.42) => {
+    const ctx = getAudioContext();
+    if (!ctx) return;
+
+    const now = ctx.currentTime;
+    const freq = BUTTON_TO_PITCH[button] || 440;
+
+    // Filtro passa-baixa para timbre quente de cerâmica
+    const filter = ctx.createBiquadFilter();
+    filter.type = 'lowpass';
+    filter.frequency.setValueAtTime(1900, now);
+    filter.Q.setValueAtTime(1.2, now);
+
+    // Envelope ADSR suave de sopro
+    const masterGain = ctx.createGain();
+    masterGain.gain.setValueAtTime(0.0001, now);
+    masterGain.gain.linearRampToValueAtTime(0.28, now + 0.04);
+    masterGain.gain.setValueAtTime(0.24, now + duration - 0.09);
+    masterGain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+
+    // Fundamental (senoide pura = ressoador fechado da Ocarina)
+    const osc1 = ctx.createOscillator();
+    osc1.type = 'sine';
+    osc1.frequency.setValueAtTime(freq * 0.985, now);
+    osc1.frequency.exponentialRampToValueAtTime(freq, now + 0.03);
+
+    // 2ª harmônica suave
+    const osc2 = ctx.createOscillator();
+    osc2.type = 'sine';
+    osc2.frequency.setValueAtTime(freq * 2, now);
+    const osc2Gain = ctx.createGain();
+    osc2Gain.gain.setValueAtTime(0.12, now);
+
+    // 3ª harmônica sutil
+    const osc3 = ctx.createOscillator();
+    osc3.type = 'sine';
+    osc3.frequency.setValueAtTime(freq * 3, now);
+    const osc3Gain = ctx.createGain();
+    osc3Gain.gain.setValueAtTime(0.03, now);
+
+    // Vibrato natural (LFO 5.2 Hz)
+    const lfo = ctx.createOscillator();
+    const lfoGain = ctx.createGain();
+    lfo.frequency.setValueAtTime(5.2, now);
+    lfoGain.gain.setValueAtTime(0, now);
+    lfoGain.gain.linearRampToValueAtTime(3.2, now + 0.12);
+    lfo.connect(lfoGain);
+    lfoGain.connect(osc1.frequency);
+
+    // Ruído sutil de sopro no ataque
+    const bufferSize = Math.floor(ctx.sampleRate * 0.12);
+    const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+    const output = noiseBuffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) {
+      output[i] = Math.random() * 2 - 1;
+    }
+    const breath = ctx.createBufferSource();
+    breath.buffer = noiseBuffer;
+    const breathFilter = ctx.createBiquadFilter();
+    breathFilter.type = 'bandpass';
+    breathFilter.frequency.setValueAtTime(freq * 1.8, now);
+    breathFilter.Q.setValueAtTime(2.5, now);
+    const breathGain = ctx.createGain();
+    breathGain.gain.setValueAtTime(0.035, now);
+    breathGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.12);
+
+    // Conexões
+    osc1.connect(filter);
+    osc2.connect(osc2Gain);
+    osc2Gain.connect(filter);
+    osc3.connect(osc3Gain);
+    osc3Gain.connect(filter);
+    breath.connect(breathFilter);
+    breathFilter.connect(breathGain);
+    breathGain.connect(filter);
+
+    filter.connect(masterGain);
+    masterGain.connect(ctx.destination);
+
+    osc1.start(now);
+    osc2.start(now);
+    osc3.start(now);
+    lfo.start(now);
+    breath.start(now);
+
+    osc1.stop(now + duration + 0.02);
+    osc2.stop(now + duration + 0.02);
+    osc3.stop(now + duration + 0.02);
+    lfo.stop(now + duration + 0.02);
+    breath.stop(now + 0.12);
   };
 
   const playSongSequence = async (song: OcarinaSong) => {
