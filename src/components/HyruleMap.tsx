@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Bug, Heart, Map as MapIcon, CheckCircle2, Sparkles, Compass } from 'lucide-react';
+import React, { useState, useRef } from 'react';
+import { Bug, Heart, Map as MapIcon, CheckCircle2, Sparkles, Compass, ZoomIn, ZoomOut, RotateCcw } from 'lucide-react';
 import { SkulltulaItem, HeartPieceItem } from '../types';
 
 interface HyruleMapProps {
@@ -96,6 +96,28 @@ export const HyruleMap: React.FC<HyruleMapProps> = ({
   onToggleHeartPiece
 }) => {
   const [selectedZoneId, setSelectedZoneId] = useState<string>('death-mountain');
+  const [zoom, setZoom] = useState<number>(1);
+  const [pan, setPan] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
+  const dragRef = useRef<{ active: boolean; startX: number; startY: number; origX: number; origY: number }>({
+    active: false,
+    startX: 0,
+    startY: 0,
+    origX: 0,
+    origY: 0
+  });
+
+  const handleZoom = (delta: number) => {
+    setZoom((prev) => {
+      const next = Math.min(2.2, Math.max(1, Number((prev + delta).toFixed(2))));
+      if (next === 1) setPan({ x: 0, y: 0 });
+      return next;
+    });
+  };
+
+  const handleResetView = () => {
+    setZoom(1);
+    setPan({ x: 0, y: 0 });
+  };
 
   const totalItems = skulltulas.length + heartPieces.length;
   const totalCollected = collectedSkulltulaIds.length + collectedHeartIds.length;
@@ -146,95 +168,124 @@ export const HyruleMap: React.FC<HyruleMapProps> = ({
 
       {/* Mapa Ilustrado + Painel Lateral */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        {/* Pergaminho Interativo */}
-        <div className="lg:col-span-7 relative rounded-2xl border-2 border-[#c8a962]/70 bg-[#d8c493] overflow-hidden shadow-2xl aspect-[4/3] select-none">
-          {/* Textura e ilustrações SVG do mapa de Hyrule */}
-          <svg
-            viewBox="0 0 800 600"
-            className="absolute inset-0 w-full h-full"
-            preserveAspectRatio="xMidYMid slice"
-          >
-            <defs>
-              <radialGradient id="parchmentGrad" cx="50%" cy="50%" r="70%">
-                <stop offset="0%" stopColor="#efe0b6" />
-                <stop offset="70%" stopColor="#d6be86" />
-                <stop offset="100%" stopColor="#b09152" />
-              </radialGradient>
-            </defs>
-            <rect width="800" height="600" fill="url(#parchmentGrad)" />
-
-            {/* Montanha da Morte (Nordeste) */}
-            <path d="M470,40 L580,10 L710,50 L740,160 L500,170 Z" fill="#9c7a49" opacity="0.45" stroke="#5a4220" strokeWidth="2" />
-            <circle cx="595" cy="75" r="24" fill="#b44b2a" opacity="0.55" />
-
-            {/* Deserto Gerudo (Oeste) */}
-            <path d="M20,160 L190,140 L210,430 L30,450 Z" fill="#c99c58" opacity="0.5" stroke="#6b4d23" strokeWidth="2" />
-
-            {/* Lago Hylia (Sul) */}
-            <ellipse cx="280" cy="470" rx="130" ry="70" fill="#5e92a3" opacity="0.55" stroke="#325563" strokeWidth="2.5" />
-
-            {/* Rio Zora -> Lago */}
-            <path
-              d="M720,270 Q620,290 540,340 T360,440"
-              fill="none"
-              stroke="#5e92a3"
-              strokeWidth="14"
-              strokeLinecap="round"
-              opacity="0.5"
-            />
-
-            {/* Floresta Kokiri / Lost Woods (Sudeste) */}
-            <path d="M510,370 L760,360 L780,560 L490,550 Z" fill="#6b8e4e" opacity="0.45" stroke="#395224" strokeWidth="2" />
-
-            {/* Planície de Hyrule (Centro) */}
-            <ellipse cx="380" cy="295" rx="170" ry="120" fill="#a8b46b" opacity="0.35" stroke="#616b35" strokeWidth="1.5" strokeDasharray="6 6" />
-
-            {/* Borda interna de pergaminho */}
-            <rect x="12" y="12" width="776" height="576" rx="12" fill="none" stroke="#5a4220" strokeWidth="2" opacity="0.5" />
-          </svg>
-
-          {/* Pins Clicáveis das Regiões */}
-          {MAP_ZONES.map((zone) => {
-            const stats = getZoneStats(zone);
-            const isSelected = zone.id === selectedZoneId;
-            return (
+        {/* Pergaminho Interativo com Zoom e Pan */}
+        <div
+          className="lg:col-span-7 relative rounded-2xl border-2 border-[#c8a962]/70 bg-[#1a140e] overflow-hidden shadow-2xl aspect-[4/3] select-none cursor-grab active:cursor-grabbing"
+          onPointerDown={(e) => {
+            if ((e.target as HTMLElement).closest('button')) return;
+            dragRef.current = {
+              active: true,
+              startX: e.clientX,
+              startY: e.clientY,
+              origX: pan.x,
+              origY: pan.y
+            };
+          }}
+          onPointerMove={(e) => {
+            if (!dragRef.current.active || zoom <= 1) return;
+            const dx = e.clientX - dragRef.current.startX;
+            const dy = e.clientY - dragRef.current.startY;
+            setPan({
+              x: Math.max(-220, Math.min(220, dragRef.current.origX + dx)),
+              y: Math.max(-160, Math.min(160, dragRef.current.origY + dy))
+            });
+          }}
+          onPointerUp={() => {
+            dragRef.current.active = false;
+          }}
+          onPointerLeave={() => {
+            dragRef.current.active = false;
+          }}
+        >
+          {/* Controles de Zoom */}
+          <div className="absolute top-3 right-3 z-30 flex items-center gap-1 bg-[#17120c]/90 border border-[#c8a962]/50 rounded-xl p-1 shadow-lg backdrop-blur-sm">
+            <button
+              type="button"
+              onClick={() => handleZoom(0.3)}
+              title="Aproximar"
+              className="p-1.5 rounded-lg text-[#f0d98c] hover:bg-[#c8a962]/20 transition-colors"
+            >
+              <ZoomIn className="w-4 h-4" />
+            </button>
+            <button
+              type="button"
+              onClick={() => handleZoom(-0.3)}
+              title="Afastar"
+              className="p-1.5 rounded-lg text-[#f0d98c] hover:bg-[#c8a962]/20 transition-colors"
+            >
+              <ZoomOut className="w-4 h-4" />
+            </button>
+            {zoom > 1 && (
               <button
-                key={zone.id}
                 type="button"
-                onClick={() => setSelectedZoneId(zone.id)}
-                style={{ left: `${zone.x}%`, top: `${zone.y}%` }}
-                className={`absolute -translate-x-1/2 -translate-y-1/2 group focus:outline-none transition-transform duration-200 ${
-                  isSelected ? 'scale-110 z-20' : 'hover:scale-105 z-10'
-                }`}
+                onClick={handleResetView}
+                title="Resetar visão"
+                className="p-1.5 rounded-lg text-gray-300 hover:bg-[#c8a962]/20 transition-colors"
               >
-                <div
-                  className={`px-2.5 py-1.5 rounded-lg border-2 shadow-lg backdrop-blur-sm transition-colors ${
-                    isSelected
-                      ? 'bg-[#1a140e]/95 border-[#f0d98c] ring-2 ring-[#f0d98c]/40'
-                      : stats.isComplete
-                      ? 'bg-emerald-950/90 border-emerald-400/80'
-                      : 'bg-[#1a140e]/85 border-[#c8a962]/80 hover:border-[#f0d98c]'
+                <RotateCcw className="w-4 h-4" />
+              </button>
+            )}
+          </div>
+
+          {/* Camada transformável (Mapa + Pins) */}
+          <div
+            className="relative w-full h-full transition-transform duration-150 ease-out"
+            style={{
+              transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`,
+              transformOrigin: 'center center'
+            }}
+          >
+            <img
+              src="/images/hyrule-map.jpg"
+              alt="Mapa Ilustrado de Hyrule"
+              draggable={false}
+              className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+            />
+            <div className="absolute inset-0 bg-black/10 pointer-events-none" />
+
+            {/* Pins Clicáveis das Regiões */}
+            {MAP_ZONES.map((zone) => {
+              const stats = getZoneStats(zone);
+              const isSelected = zone.id === selectedZoneId;
+              return (
+                <button
+                  key={zone.id}
+                  type="button"
+                  onClick={() => setSelectedZoneId(zone.id)}
+                  style={{ left: `${zone.x}%`, top: `${zone.y}%` }}
+                  className={`absolute -translate-x-1/2 -translate-y-1/2 group focus:outline-none transition-transform duration-200 ${
+                    isSelected ? 'scale-110 z-20' : 'hover:scale-105 z-10'
                   }`}
                 >
-                  <div className="text-[11px] sm:text-xs font-bold text-[#f7ebd0] whitespace-nowrap leading-tight">
-                    {zone.label}
-                  </div>
-                  <div className="flex items-center justify-center gap-2 mt-1 text-[10px] font-mono font-semibold">
-                    <span className="flex items-center gap-0.5 text-[#e2c779]">
-                      <Bug className="w-3 h-3" />
-                      {stats.collectedS}/{stats.zSkulltulas.length}
-                    </span>
-                    {stats.zHearts.length > 0 && (
-                      <span className="flex items-center gap-0.5 text-red-400">
-                        <Heart className="w-3 h-3 fill-red-400" />
-                        {stats.collectedH}/{stats.zHearts.length}
+                  <div
+                    className={`px-2.5 py-1.5 rounded-lg border-2 shadow-lg backdrop-blur-sm transition-colors ${
+                      isSelected
+                        ? 'bg-[#1a140e]/95 border-[#f0d98c] ring-2 ring-[#f0d98c]/40'
+                        : stats.isComplete
+                        ? 'bg-emerald-950/90 border-emerald-400/80'
+                        : 'bg-[#1a140e]/85 border-[#c8a962]/80 hover:border-[#f0d98c]'
+                    }`}
+                  >
+                    <div className="text-[11px] sm:text-xs font-bold text-[#f7ebd0] whitespace-nowrap leading-tight">
+                      {zone.label}
+                    </div>
+                    <div className="flex items-center justify-center gap-2 mt-1 text-[10px] font-mono font-semibold">
+                      <span className="flex items-center gap-0.5 text-[#e2c779]">
+                        <Bug className="w-3 h-3" />
+                        {stats.collectedS}/{stats.zSkulltulas.length}
                       </span>
-                    )}
+                      {stats.zHearts.length > 0 && (
+                        <span className="flex items-center gap-0.5 text-red-400">
+                          <Heart className="w-3 h-3 fill-red-400" />
+                          {stats.collectedH}/{stats.zHearts.length}
+                        </span>
+                      )}
+                    </div>
                   </div>
-                </div>
-              </button>
-            );
-          })}
+                </button>
+              );
+            })}
+          </div>
         </div>
 
         {/* Painel de Detalhes da Região Selecionada */}
