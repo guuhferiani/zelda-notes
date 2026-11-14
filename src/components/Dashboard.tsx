@@ -36,7 +36,6 @@ export const Dashboard: React.FC<DashboardProps> = ({
   completedEventsCount,
   notes,
   onNavigate,
-  onOpenNeonModal,
   isNeonEnabled
 }) => {
   // Renderiza os corações de vida do Link
