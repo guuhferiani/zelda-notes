@@ -97,33 +97,12 @@ export const Navbar: React.FC<NavbarProps> = ({
               })}
             </nav>
 
-            {/* Ações / Status Discreto do Header */}
-            <div className="flex items-center gap-2 sm:gap-3">
-              
-              {/* Indicador Elegante de Sincronização / Nuvem */}
-              <div 
-                title={neonConfig.isEnabled ? 'Sincronização em nuvem ativa com Neon PostgreSQL' : 'Armazenamento local'}
-                className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-sheikah-card/60 border border-sheikah-border text-xs text-zinc-300 select-none"
-              >
-                <span className="relative flex h-2 w-2">
-                  <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${
-                    neonConfig.isEnabled ? 'bg-emerald-400' : 'bg-zinc-500'
-                  }`} />
-                  <span className={`relative inline-flex rounded-full h-2 w-2 ${
-                    neonConfig.isEnabled ? 'bg-emerald-500' : 'bg-zinc-500'
-                  }`} />
-                </span>
-                <span className="hidden sm:inline text-[11px] font-medium text-zinc-300">
-                  {neonConfig.isEnabled ? 'Nuvem Ativa' : 'Local'}
-                </span>
-                {gameState.connected && (
-                  <span className="hidden lg:inline text-[10px] text-emerald-400 font-semibold border-l border-zinc-700 pl-1.5">
-                    🎮 Jogo Conectado
-                  </span>
-                )}
+            {/* Status opcional do Jogo Conectado */}
+            {gameState.connected && (
+              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-sheikah-card/60 border border-sheikah-border text-[10px] text-emerald-400 font-semibold select-none">
+                🎮 Jogo Conectado
               </div>
-
-            </div>
+            )}
 
           </div>
         </div>
