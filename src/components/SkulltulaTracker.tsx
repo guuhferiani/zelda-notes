@@ -152,7 +152,7 @@ export const SkulltulaTracker: React.FC<SkulltulaTrackerProps> = ({
             <div
               key={item.id}
               onClick={() => onToggle(item.id)}
-              className={`cursor-pointer p-3.5 rounded-xl border transition-all flex items-start gap-3 select-none ${
+              className={`cursor-pointer p-3.5 min-h-[44px] rounded-xl border transition-all flex items-start gap-3 select-none ${
                 isDone 
                   ? 'bg-sheikah-darkest/40 border-sheikah-border/40 opacity-70' 
                   : 'bg-sheikah-card border-sheikah-border hover:border-sheikah-gold/60 shadow-sm'
