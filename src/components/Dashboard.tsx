@@ -13,7 +13,9 @@ import {
   Database,
   Trophy,
   Settings,
-  ShieldCheck
+  ShieldCheck,
+  BookOpen,
+  ScrollText
 } from 'lucide-react';
 import { LiveGameState, Note } from '../types';
 
@@ -112,7 +114,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
         <div className="grid grid-cols-3 sm:grid-cols-5 gap-4 sm:gap-5">
           {[
             {
-              id: 'journal' as TabId,
+              id: 'journal',
               label: 'Diário de Bordo',
               badge: `${notes.length}`,
               icon: BookOpen,
@@ -120,7 +122,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
               iconColor: 'text-[#5c3d1e]'
             },
             {
-              id: 'skulltulas' as TabId,
+              id: 'skulltulas',
               label: 'Skulltulas',
               badge: `${collectedSkulltulasCount}/100`,
               icon: Bug,
@@ -128,7 +130,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
               iconColor: 'text-[#e2c779]'
             },
             {
-              id: 'hearts' as TabId,
+              id: 'hearts',
               label: 'Corações',
               badge: `${collectedHeartsCount}/36`,
               icon: Heart,
@@ -136,7 +138,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
               iconColor: 'text-red-700'
             },
             {
-              id: 'songs' as TabId,
+              id: 'songs',
               label: 'Ocarina',
               badge: `${learnedSongsCount}/12`,
               icon: Music,
@@ -144,7 +146,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
               iconColor: 'text-sky-300'
             },
             {
-              id: 'timeline' as TabId,
+              id: 'timeline',
               label: 'História',
               badge: `${completedEventsCount}/16`,
               icon: ScrollText,
