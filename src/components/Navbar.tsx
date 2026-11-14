@@ -17,15 +17,13 @@ interface NavbarProps {
   setActiveTab: (tab: string) => void;
   gameState: LiveGameState;
   neonConfig: NeonConfig;
-  onOpenNeonModal: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
   activeTab,
   setActiveTab,
   gameState,
-  neonConfig,
-  onOpenNeonModal
+  neonConfig
 }) => {
   const tabs = [
     { id: 'dashboard', label: 'Painel', shortLabel: 'Início', icon: Sparkles },
@@ -124,16 +122,6 @@ export const Navbar: React.FC<NavbarProps> = ({
                   </span>
                 )}
               </div>
-
-              {/* Botão de Configurações / Nuvem */}
-              <button
-                onClick={onOpenNeonModal}
-                title="Configurações & Conexão com Nuvem"
-                className="p-2 rounded-xl text-zinc-400 hover:text-white bg-sheikah-card/60 hover:bg-sheikah-card border border-sheikah-border hover:border-zinc-600 transition-all active:scale-95"
-                aria-label="Configurações de Nuvem"
-              >
-                <Settings className="w-4 h-4" />
-              </button>
 
             </div>
 

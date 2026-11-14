@@ -1,7 +1,11 @@
 import fs from 'fs';
 import { neon } from '@neondatabase/serverless';
 
-const url = 'postgresql://neondb_owner:npg_HqCMGbyv73jx@ep-weathered-waterfall-b6vbjwxh-pooler.c-2.sa-east-1.aws.neon.tech/neondb?sslmode=require';
+const url = process.env.DATABASE_URL;
+if (!url) {
+  console.error('Erro: variável de ambiente DATABASE_URL não definida.');
+  process.exit(1);
+}
 const sql = neon(url);
 
 const ddl = fs.readFileSync('db/schema.sql', 'utf8');

@@ -94,24 +94,15 @@ export const NeonSettingsModal: React.FC<NeonSettingsModalProps> = ({
             </a>
           </div>
 
-          <div>
-            <label className="block text-xs font-semibold text-gray-300 mb-1.5">
-              URL de Conexão do Neon (PostgreSQL Connection String)
-            </label>
-            <input
-              type="password"
-              placeholder="postgresql://user:pass@ep-xyz.us-east-2.aws.neon.tech/neondb?sslmode=require"
-              value={dbUrl}
-              onChange={(e) => setDbUrl(e.target.value)}
-              className="w-full px-3 py-2.5 rounded-lg bg-sheikah-darkest border border-sheikah-border text-white text-xs font-mono focus:outline-none focus:border-sheikah-gold"
-            />
+          <div className="p-3 rounded-lg bg-sheikah-darkest border border-sheikah-border text-xs text-gray-300 leading-relaxed">
+            A conexão com o Neon PostgreSQL é feita de forma segura pelo servidor (<code className="text-sheikah-gold">/api/sync</code>) usando a variável de ambiente <code className="text-sheikah-gold">DATABASE_URL</code> configurada na Vercel.
           </div>
 
           <div className="flex items-center gap-2">
             <button
               type="button"
               onClick={handleTest}
-              disabled={testing || !dbUrl}
+              disabled={testing}
               className="px-3 py-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-gray-200 text-xs font-semibold border border-zinc-600 flex items-center gap-1.5 disabled:opacity-50 transition-colors"
             >
               {testing ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Database className="w-3.5 h-3.5" />}

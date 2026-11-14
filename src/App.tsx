@@ -6,7 +6,6 @@ import { SkulltulaTracker } from './components/SkulltulaTracker';
 import { HeartTracker } from './components/HeartTracker';
 import { SongBook } from './components/SongBook';
 import { StoryTimeline } from './components/StoryTimeline';
-import { NeonSettingsModal } from './components/NeonSettingsModal';
 
 import { SKULLTULAS_DATA } from './data/skulltulas';
 import { HEART_PIECES_DATA } from './data/heartPieces';
@@ -26,7 +25,6 @@ export function App() {
   const [learnedSongs, setLearnedSongs] = useState<string[]>([]);
   const [completedEvents, setCompletedEvents] = useState<string[]>([]);
   const [neonConfig, setNeonConfig] = useState<NeonConfig>(StorageService.getNeonConfig());
-  const [isNeonModalOpen, setIsNeonModalOpen] = useState(false);
 
   // Carrega dados locais ao iniciar e hidrata da nuvem Neon DB
   useEffect(() => {
@@ -111,7 +109,6 @@ export function App() {
         setActiveTab={setActiveTab}
         gameState={gameState}
         neonConfig={neonConfig}
-        onOpenNeonModal={() => setIsNeonModalOpen(true)}
       />
 
       {/* Conteúdo Principal */}
@@ -125,7 +122,6 @@ export function App() {
             completedEventsCount={completedEvents.length}
             notes={notes}
             onNavigate={setActiveTab}
-            onOpenNeonModal={() => setIsNeonModalOpen(true)}
             isNeonEnabled={neonConfig.isEnabled}
           />
         )}
@@ -181,14 +177,6 @@ export function App() {
           </p>
         </div>
       </footer>
-
-      {/* Modal de Configuração do Neon DB */}
-      <NeonSettingsModal
-        isOpen={isNeonModalOpen}
-        onClose={() => setIsNeonModalOpen(false)}
-        config={neonConfig}
-        onSaveConfig={handleSaveNeonConfig}
-      />
 
     </div>
   );

@@ -1,7 +1,4 @@
 import { Note, NeonConfig } from '../types';
-import { neon } from '@neondatabase/serverless';
-
-declare const __VITE_DATABASE_URL__: string | undefined;
 
 const STORAGE_KEYS = {
   NOTES: 'zelda_notes_list',
@@ -11,12 +8,6 @@ const STORAGE_KEYS = {
   EVENTS: 'zelda_events_status',
   NEON_CONFIG: 'zelda_neon_config'
 };
-
-const ENV_NEON_URL = (typeof __VITE_DATABASE_URL__ !== 'undefined' && __VITE_DATABASE_URL__)
-  ? __VITE_DATABASE_URL__
-  : ((import.meta as any).env?.VITE_DATABASE_URL || '');
-
-const DEFAULT_NEON_URL = ENV_NEON_URL || 'postgresql://neondb_owner:npg_HqCMGbyv73jx@ep-weathered-waterfall-b6vbjwxh-pooler.c-2.sa-east-1.aws.neon.tech/neondb?sslmode=require';
 
 export interface CloudData {
   notes: Note[];
@@ -33,113 +24,59 @@ export class StorageService {
     const raw = localStorage.getItem(STORAGE_KEYS.NEON_CONFIG);
     if (!raw) {
       return {
-        databaseUrl: DEFAULT_NEON_URL,
+        databaseUrl: '',
         isEnabled: true,
-        lastSyncAt: new Date().toISOString()
+        lastSyncAt: null
       };
     }
     try {
       const parsed = JSON.parse(raw);
-      if (!parsed.databaseUrl) {
-        parsed.databaseUrl = DEFAULT_NEON_URL;
-        parsed.isEnabled = true;
-      }
-      return parsed;
+      return {
+        databaseUrl: '',
+        isEnabled: Boolean(parsed.isEnabled),
+        lastSyncAt: parsed.lastSyncAt || null
+      };
     } catch {
-      return { databaseUrl: DEFAULT_NEON_URL, isEnabled: true, lastSyncAt: null };
+      return { databaseUrl: '', isEnabled: true, lastSyncAt: null };
     }
   }
 
   static setNeonConfig(config: NeonConfig) {
-    localStorage.setItem(STORAGE_KEYS.NEON_CONFIG, JSON.stringify(config));
+    localStorage.setItem(
+      STORAGE_KEYS.NEON_CONFIG,
+      JSON.stringify({
+        databaseUrl: '',
+        isEnabled: config.isEnabled,
+        lastSyncAt: config.lastSyncAt
+      })
+    );
   }
 
-  // Testa conexão com o Neon PostgreSQL
-  static async testNeonConnection(dbUrl: string): Promise<{ success: boolean; message: string }> {
-    if (!dbUrl || (!dbUrl.startsWith('postgresql://') && !dbUrl.startsWith('postgres://'))) {
-      return { success: false, message: 'URL de conexão inválida. Deve começar com postgresql://' };
-    }
-
+  // Testa conexão com o Neon PostgreSQL via API Route (sem expor credenciais no cliente)
+  static async testNeonConnection(_dbUrl?: string): Promise<{ success: boolean; message: string }> {
     try {
-      const sql = neon(dbUrl);
-      const result = await sql`SELECT NOW() as current_time, current_database() as db;`;
-      if (result && result.length > 0) {
-        return { 
-          success: true, 
-          message: `Conectado com sucesso ao banco [${result[0].db}] no Neon!` 
-        };
-      }
-      return { success: false, message: 'Não foi possível verificar a resposta do banco.' };
+      const res = await fetch('/api/sync?action=test');
+      const data = await res.json();
+      return {
+        success: Boolean(data.success),
+        message: data.message || (res.ok ? 'Conectado ao Neon!' : 'Falha ao conectar ao Neon DB.')
+      };
     } catch (err: any) {
-      return { success: false, message: err?.message || 'Falha ao conectar ao Neon DB.' };
+      return { success: false, message: err?.message || 'Falha ao conectar ao servidor.' };
     }
   }
 
   // ---- Hidratação e Sincronização Completa com o Neon Cloud ----
   static async fetchCloudData(): Promise<CloudData | null> {
     const config = this.getNeonConfig();
-    if (!config.isEnabled || !config.databaseUrl) return null;
+    if (!config.isEnabled) return null;
 
     try {
-      const sql = neon(config.databaseUrl);
+      const res = await fetch('/api/sync');
+      if (!res.ok) return null;
+      const data: CloudData = await res.json();
 
-      // Garante que o profile padrão exista
-      await sql`
-        INSERT INTO game_profiles (id, player_name, active_slot)
-        VALUES ('default', 'Link', 'slot_05')
-        ON CONFLICT (id) DO NOTHING;
-      `;
-
-      // 1. Busca Anotações do Diário
-      const rawNotes = await sql`
-        SELECT id, title, content, area, category, is_pinned, created_at, updated_at
-        FROM journal_notes
-        WHERE profile_id = 'default'
-        ORDER BY is_pinned DESC, updated_at DESC;
-      `;
-
-      const notes: Note[] = rawNotes.map((r: any) => ({
-        id: String(r.id),
-        title: String(r.title),
-        content: String(r.content),
-        area: String(r.area || 'Hyrule'),
-        category: (r.category || 'quest') as any,
-        isPinned: Boolean(r.is_pinned),
-        createdAt: r.created_at ? new Date(r.created_at).toISOString() : new Date().toISOString(),
-        updatedAt: r.updated_at ? new Date(r.updated_at).toISOString() : new Date().toISOString()
-      }));
-
-      // 2. Busca Skulltulas Coletadas
-      const rawSkulltulas = await sql`
-        SELECT skulltula_id 
-        FROM skulltulas_progress 
-        WHERE profile_id = 'default' AND is_collected = TRUE;
-      `;
-      const skulltulas: number[] = rawSkulltulas.map((r: any) => Number(r.skulltula_id));
-
-      // 3. Busca Peças de Coração
-      const rawHearts = await sql`
-        SELECT heart_piece_id 
-        FROM heart_pieces_progress 
-        WHERE profile_id = 'default' AND is_collected = TRUE;
-      `;
-      const hearts: number[] = rawHearts.map((r: any) => Number(r.heart_piece_id));
-
-      // 4. Busca Canções Aprendidas
-      const rawSongs = await sql`
-        SELECT song_id 
-        FROM songs_progress 
-        WHERE profile_id = 'default' AND is_learned = TRUE;
-      `;
-      const songs: string[] = rawSongs.map((r: any) => String(r.song_id));
-
-      // 5. Busca Marcos da História
-      const rawEvents = await sql`
-        SELECT event_key 
-        FROM story_events_progress 
-        WHERE profile_id = 'default' AND is_completed = TRUE;
-      `;
-      const events: string[] = rawEvents.map((r: any) => String(r.event_key));
+      const { notes, skulltulas, hearts, songs, events } = data;
 
       // Atualiza cache no localStorage
       if (notes.length > 0) localStorage.setItem(STORAGE_KEYS.NOTES, JSON.stringify(notes));
@@ -151,17 +88,29 @@ export class StorageService {
       config.lastSyncAt = new Date().toISOString();
       this.setNeonConfig(config);
 
-      return {
-        notes,
-        skulltulas,
-        hearts,
-        songs,
-        events,
-        activeSlot: 'slot_05'
-      };
+      return data;
     } catch (err) {
       console.warn('Erro ao sincronizar com Neon DB:', err);
       return null;
+    }
+  }
+
+  private static async postSync(action: string, payload: unknown) {
+    const config = this.getNeonConfig();
+    if (!config.isEnabled) return;
+
+    try {
+      const res = await fetch('/api/sync', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action, payload })
+      });
+      if (res.ok) {
+        config.lastSyncAt = new Date().toISOString();
+        this.setNeonConfig(config);
+      }
+    } catch (e) {
+      console.warn(`Erro ao sincronizar (${action}) com Neon:`, e);
     }
   }
 
@@ -203,39 +152,11 @@ export class StorageService {
   }
 
   private static async syncNoteToNeon(note: Note) {
-    const config = this.getNeonConfig();
-    if (!config.isEnabled || !config.databaseUrl) return;
-
-    try {
-      const sql = neon(config.databaseUrl);
-      await sql`
-        INSERT INTO journal_notes (id, profile_id, slot_id, title, content, area, category, is_pinned, updated_at)
-        VALUES (${note.id}, 'default', 'slot_05', ${note.title}, ${note.content}, ${note.area}, ${note.category}, ${note.isPinned}, NOW())
-        ON CONFLICT (id) DO UPDATE SET
-          title = EXCLUDED.title,
-          content = EXCLUDED.content,
-          area = EXCLUDED.area,
-          category = EXCLUDED.category,
-          is_pinned = EXCLUDED.is_pinned,
-          updated_at = NOW();
-      `;
-      config.lastSyncAt = new Date().toISOString();
-      this.setNeonConfig(config);
-    } catch (e) {
-      console.warn('Erro ao sincronizar nota com Neon:', e);
-    }
+    await this.postSync('saveNote', note);
   }
 
   private static async deleteNoteFromNeon(id: string) {
-    const config = this.getNeonConfig();
-    if (!config.isEnabled || !config.databaseUrl) return;
-
-    try {
-      const sql = neon(config.databaseUrl);
-      await sql`DELETE FROM journal_notes WHERE id = ${id}`;
-    } catch (e) {
-      console.warn('Erro ao deletar nota do Neon:', e);
-    }
+    await this.postSync('deleteNote', { id });
   }
 
   // ---- Checklists (Skulltulas, Hearts, Songs, Events) ----
@@ -263,20 +184,7 @@ export class StorageService {
   }
 
   private static async syncSkulltulaToNeon(id: number, isCollected: boolean) {
-    const config = this.getNeonConfig();
-    if (!config.isEnabled || !config.databaseUrl) return;
-    try {
-      const sql = neon(config.databaseUrl);
-      await sql`
-        INSERT INTO skulltulas_progress (profile_id, slot_id, skulltula_id, is_collected, collected_at)
-        VALUES ('default', 'slot_05', ${id}, ${isCollected}, NOW())
-        ON CONFLICT (profile_id, slot_id, skulltula_id) DO UPDATE SET
-          is_collected = ${isCollected},
-          collected_at = NOW();
-      `;
-    } catch (e) {
-      console.warn('Erro ao sincronizar skulltula com Neon:', e);
-    }
+    await this.postSync('toggleSkulltula', { id, isCollected });
   }
 
   static getCollectedHeartPieces(): number[] {
@@ -303,20 +211,7 @@ export class StorageService {
   }
 
   private static async syncHeartPieceToNeon(id: number, isCollected: boolean) {
-    const config = this.getNeonConfig();
-    if (!config.isEnabled || !config.databaseUrl) return;
-    try {
-      const sql = neon(config.databaseUrl);
-      await sql`
-        INSERT INTO heart_pieces_progress (profile_id, slot_id, heart_piece_id, is_collected, collected_at)
-        VALUES ('default', 'slot_05', ${id}, ${isCollected}, NOW())
-        ON CONFLICT (profile_id, slot_id, heart_piece_id) DO UPDATE SET
-          is_collected = ${isCollected},
-          collected_at = NOW();
-      `;
-    } catch (e) {
-      console.warn('Erro ao sincronizar peça de coração com Neon:', e);
-    }
+    await this.postSync('toggleHeartPiece', { id, isCollected });
   }
 
   static getLearnedSongs(): string[] {
@@ -343,20 +238,7 @@ export class StorageService {
   }
 
   private static async syncSongToNeon(songId: string, isLearned: boolean) {
-    const config = this.getNeonConfig();
-    if (!config.isEnabled || !config.databaseUrl) return;
-    try {
-      const sql = neon(config.databaseUrl);
-      await sql`
-        INSERT INTO songs_progress (profile_id, slot_id, song_id, is_learned, learned_at)
-        VALUES ('default', 'slot_05', ${songId}, ${isLearned}, NOW())
-        ON CONFLICT (profile_id, slot_id, song_id) DO UPDATE SET
-          is_learned = ${isLearned},
-          learned_at = NOW();
-      `;
-    } catch (e) {
-      console.warn('Erro ao sincronizar canção com Neon:', e);
-    }
+    await this.postSync('toggleSong', { songId, isLearned });
   }
 
   static getCompletedEvents(): string[] {
@@ -383,19 +265,6 @@ export class StorageService {
   }
 
   private static async syncEventToNeon(eventKey: string, isCompleted: boolean) {
-    const config = this.getNeonConfig();
-    if (!config.isEnabled || !config.databaseUrl) return;
-    try {
-      const sql = neon(config.databaseUrl);
-      await sql`
-        INSERT INTO story_events_progress (profile_id, slot_id, event_key, is_completed, completed_at)
-        VALUES ('default', 'slot_05', ${eventKey}, ${isCompleted}, NOW())
-        ON CONFLICT (profile_id, slot_id, event_key) DO UPDATE SET
-          is_completed = ${isCompleted},
-          completed_at = NOW();
-      `;
-    } catch (e) {
-      console.warn('Erro ao sincronizar evento com Neon:', e);
-    }
+    await this.postSync('toggleEvent', { eventKey, isCompleted });
   }
 }

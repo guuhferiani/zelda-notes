@@ -25,7 +25,6 @@ interface DashboardProps {
   completedEventsCount: number;
   notes: Note[];
   onNavigate: (tab: string) => void;
-  onOpenNeonModal: () => void;
   isNeonEnabled: boolean;
 }
 
@@ -301,13 +300,6 @@ export const Dashboard: React.FC<DashboardProps> = ({
             </div>
           </div>
 
-          <button
-            onClick={onOpenNeonModal}
-            className="mt-4 w-full py-2 px-3 rounded-lg text-xs font-semibold bg-sheikah-card hover:bg-zinc-800 text-gray-300 hover:text-white border border-sheikah-border/80 hover:border-zinc-600 transition-colors flex items-center justify-center gap-1.5"
-          >
-            <Settings className="w-3.5 h-3.5" />
-            <span>Configurações & Backup</span>
-          </button>
         </div>
 
       </div>
