@@ -19,6 +19,9 @@ export interface CloudData {
 }
 
 export class StorageService {
+  // Defina como false quando quiser reativar as chamadas ao backend (/api/sync)
+  private static readonly BACKEND_SYNC_PAUSED = true;
+
   // ---- Configuração do Neon DB ----
   static getNeonConfig(): NeonConfig {
     const raw = localStorage.getItem(STORAGE_KEYS.NEON_CONFIG);
@@ -68,6 +71,8 @@ export class StorageService {
 
   // ---- Hidratação e Sincronização Completa com o Neon Cloud ----
   static async fetchCloudData(): Promise<CloudData | null> {
+    if (this.BACKEND_SYNC_PAUSED) return null;
+
     const config = this.getNeonConfig();
     if (!config.isEnabled) return null;
 
@@ -96,6 +101,8 @@ export class StorageService {
   }
 
   private static async postSync(action: string, payload: unknown) {
+    if (this.BACKEND_SYNC_PAUSED) return;
+
     const config = this.getNeonConfig();
     if (!config.isEnabled) return;
 

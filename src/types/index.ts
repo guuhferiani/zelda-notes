@@ -29,11 +29,36 @@ export interface HeartPieceItem {
   isCollected?: boolean;
 }
 
+export type OcarinaButton = 'A' | 'UP' | 'DOWN' | 'LEFT' | 'RIGHT';
+
+export type OcarinaNotePitch =
+  | 'C4'
+  | 'D4'
+  | 'E4'
+  | 'F4'
+  | 'F#4'
+  | 'G4'
+  | 'A4'
+  | 'Bb4'
+  | 'B4'
+  | 'C5'
+  | 'D5'
+  | 'E5';
+
+export interface OcarinaScoreNote {
+  pitch: OcarinaNotePitch;
+  start: number;
+  duration: number;
+  button?: OcarinaButton;
+}
+
 export interface OcarinaSong {
   id: string;
   name: string;
   namePt: string;
-  notes: ('A' | 'UP' | 'DOWN' | 'LEFT' | 'RIGHT')[];
+  notes: OcarinaButton[];
+  introScore?: OcarinaScoreNote[];
+  fullScore?: OcarinaScoreNote[];
   effect: string;
   location: string;
   category: 'warp' | 'magic' | 'special';

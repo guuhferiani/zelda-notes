@@ -55,6 +55,11 @@ export function App() {
     return () => unsubscribe();
   }, []);
 
+  const handleNavigate = (tab: string) => {
+    setActiveTab(tab);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   // Handlers do Diário
   const handleSaveNote = (note: Note) => {
     const updated = StorageService.saveNote(note);
@@ -107,7 +112,7 @@ export function App() {
       {/* Barra de Navegação Superior */}
       <Navbar
         activeTab={activeTab}
-        setActiveTab={setActiveTab}
+        setActiveTab={handleNavigate}
         gameState={gameState}
         neonConfig={neonConfig}
       />
@@ -122,7 +127,7 @@ export function App() {
             learnedSongsCount={learnedSongs.length}
             completedEventsCount={completedEvents.length}
             notes={notes}
-            onNavigate={setActiveTab}
+            onNavigate={handleNavigate}
             isNeonEnabled={neonConfig.isEnabled}
           />
         )}
@@ -176,6 +181,12 @@ export function App() {
             heartPieces={HEART_PIECES_DATA}
             collectedHeartIds={collectedHearts}
             onToggleHeartPiece={handleToggleHeart}
+            songs={OCARINA_SONGS_DATA}
+            learnedSongIds={learnedSongs}
+            onToggleSong={handleToggleSong}
+            milestones={STORY_MILESTONES_DATA}
+            completedEventKeys={completedEvents}
+            onToggleEvent={handleToggleEvent}
           />
         )}
       </main>

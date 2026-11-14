@@ -44,13 +44,15 @@ export const Navbar: React.FC<NavbarProps> = ({
           <div className="flex items-center justify-between h-16">
             
             {/* Logo & Identidade do App */}
-            <div 
-              onClick={() => setActiveTab('dashboard')} 
-              className="flex items-center gap-3 cursor-pointer group select-none"
+            <button
+              type="button"
+              onClick={() => setActiveTab('dashboard')}
+              aria-label="Voltar para o início"
+              className="flex items-center gap-3 cursor-pointer group select-none text-left"
             >
               <div className="relative w-10 h-10 rounded-xl bg-gradient-to-br from-sheikah-gold/30 via-sheikah-card to-sheikah-kokiri/20 p-0.5 shadow-[0_0_15px_-3px_rgba(234,179,8,0.3)] group-hover:shadow-glow-gold transition-all duration-300">
                 <img 
-                  src="/favicon.svg" 
+                  src="/icon.png" 
                   alt="Zelda Notes Emblem" 
                   className="w-full h-full object-cover rounded-[10px]" 
                 />
@@ -65,7 +67,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   Nintendo Companion • Hyrule Journal
                 </p>
               </div>
-            </div>
+            </button>
 
             {/* Abas de Navegação Centrais (Apenas Desktop / Tablets Grandes) */}
             <nav className="hidden md:flex items-center gap-1 lg:gap-1.5 bg-sheikah-dark/80 p-1 rounded-xl border border-sheikah-border/60">
@@ -114,7 +116,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-sheikah-darkest/95 backdrop-blur-2xl border-t border-sheikah-border/80 shadow-[0_-10px_25px_-5px_rgba(0,0,0,0.8)] pb-[max(0.5rem,env(safe-area-inset-bottom))]"
       >
         <div className="grid grid-cols-6 h-14 max-w-md mx-auto px-1">
-          {tabs.map((tab) => {
+          {tabs.filter((tab) => tab.id !== 'dashboard').map((tab) => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;
             return (
