@@ -101,11 +101,14 @@ export const JournalNotes: React.FC<JournalNotesProps> = ({
   return (
     <div className="space-y-6">
       
-      {/* Cabeçalho */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-sheikah-card border border-sheikah-border p-5 rounded-xl">
+      {/* Cabeçalho estilo Gossip Quests */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-gradient-to-b from-[#2c2115] to-[#17120c] border border-[#c8a962]/40 p-6 rounded-2xl shadow-lg">
         <div>
-          <h2 className="text-xl font-bold text-white font-hylian flex items-center gap-2">
-            <Scroll className="w-5 h-5 text-sheikah-gold" />
+          <span className="text-[11px] uppercase tracking-widest text-[#c8a962] font-semibold">
+            The Legend of Zelda: Ocarina of Time
+          </span>
+          <h2 className="text-xl sm:text-2xl font-bold text-white font-hylian flex items-center gap-2 mt-0.5">
+            <Scroll className="w-5 h-5 text-[#e2c779]" />
             <span>Diário de Bordo do Herói</span>
           </h2>
           <p className="text-xs text-gray-400 mt-1">

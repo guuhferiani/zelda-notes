@@ -134,12 +134,15 @@ export const SongBook: React.FC<SongBookProps> = ({
   return (
     <div className="space-y-6">
       
-      {/* Banner */}
-      <div className="bg-sheikah-card border border-sheikah-border p-5 rounded-xl">
+      {/* Banner estilo Play Ocarina */}
+      <div className="bg-gradient-to-b from-[#2c2115] to-[#17120c] border border-[#c8a962]/40 p-6 rounded-2xl shadow-lg">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h2 className="text-xl font-bold text-white font-hylian flex items-center gap-2">
-              <Music className="w-5 h-5 text-sky-400" />
+            <span className="text-[11px] uppercase tracking-widest text-[#c8a962] font-semibold">
+              The Legend of Zelda: Ocarina of Time
+            </span>
+            <h2 className="text-xl sm:text-2xl font-bold text-white font-hylian flex items-center gap-2 mt-0.5">
+              <Music className="w-5 h-5 text-[#e2c779]" />
               <span>Livro de Canções da Ocarina (12 Músicas)</span>
             </h2>
             <p className="text-xs text-gray-400 mt-1">
