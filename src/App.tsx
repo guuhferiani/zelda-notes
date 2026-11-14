@@ -173,7 +173,15 @@ export function App() {
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
           <p>Zelda Notes — Companion App de The Legend of Zelda: Ocarina of Time (Switch 2 & PC)</p>
           <p className="text-gray-400">
-            Sincronizado com <span className="text-sheikah-gold font-medium">Hookshot PC</span>
+            Desenvolvido por{' '}
+            <a
+              href="https://github.com/guuhferiani"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sheikah-gold font-medium hover:underline"
+            >
+              Gustavo Feriani (@guuhferiani)
+            </a>
           </p>
         </div>
       </footer>
