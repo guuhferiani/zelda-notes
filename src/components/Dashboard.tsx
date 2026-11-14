@@ -100,8 +100,90 @@ export const Dashboard: React.FC<DashboardProps> = ({
         </div>
       </div>
 
+      {/* Menu Principal estilo Zelda Notes Oficial */}
+      <div className="rounded-2xl bg-gradient-to-b from-[#1a1611] to-[#12100d] border border-[#c8a962]/30 p-5 sm:p-6 shadow-xl">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-sm font-bold uppercase tracking-widest text-[#e2c779] font-hylian">
+            Menu Principal
+          </h2>
+          <span className="text-[11px] text-gray-400">Ocarina of Time</span>
+        </div>
+
+        <div className="grid grid-cols-3 sm:grid-cols-5 gap-4 sm:gap-5">
+          {[
+            {
+              id: 'journal' as TabId,
+              label: 'Diário de Bordo',
+              badge: `${notes.length}`,
+              icon: BookOpen,
+              parchment: true,
+              iconColor: 'text-[#5c3d1e]'
+            },
+            {
+              id: 'skulltulas' as TabId,
+              label: 'Skulltulas',
+              badge: `${collectedSkulltulasCount}/100`,
+              icon: Bug,
+              parchment: false,
+              iconColor: 'text-[#e2c779]'
+            },
+            {
+              id: 'hearts' as TabId,
+              label: 'Corações',
+              badge: `${collectedHeartsCount}/36`,
+              icon: Heart,
+              parchment: true,
+              iconColor: 'text-red-700'
+            },
+            {
+              id: 'songs' as TabId,
+              label: 'Ocarina',
+              badge: `${learnedSongsCount}/12`,
+              icon: Music,
+              parchment: false,
+              iconColor: 'text-sky-300'
+            },
+            {
+              id: 'timeline' as TabId,
+              label: 'História',
+              badge: `${completedEventsCount}/16`,
+              icon: ScrollText,
+              parchment: true,
+              iconColor: 'text-[#4a3518]'
+            }
+          ].map((tile) => {
+            const Icon = tile.icon;
+            return (
+              <button
+                key={tile.id}
+                type="button"
+                onClick={() => onNavigate(tile.id)}
+                className="group flex flex-col items-center gap-2 focus:outline-none"
+              >
+                <div
+                  className={`relative w-full aspect-square rounded-xl border-2 border-[#c8a962] shadow-lg flex items-center justify-center transition-all duration-200 group-hover:scale-105 group-hover:border-[#f0d98c] group-active:scale-95 ${
+                    tile.parchment
+                      ? 'bg-gradient-to-br from-[#e9dcb8] via-[#d7c28e] to-[#b59754]'
+                      : 'bg-gradient-to-br from-[#211c15] via-[#17130e] to-[#0f0c09]'
+                  }`}
+                >
+                  <div className="absolute inset-1 rounded-lg border border-black/20 pointer-events-none" />
+                  <Icon className={`w-9 h-9 sm:w-11 sm:h-11 ${tile.iconColor} drop-shadow`} />
+                  <span className="absolute bottom-1.5 right-1.5 px-1.5 py-0.5 rounded bg-black/70 text-[10px] font-mono font-semibold text-[#f0d98c] border border-[#c8a962]/40">
+                    {tile.badge}
+                  </span>
+                </div>
+                <span className="text-xs sm:text-sm font-semibold text-gray-200 group-hover:text-[#f0d98c] transition-colors text-center leading-tight">
+                  {tile.label}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
       {/* Cartões de Estatísticas / Checklists */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
         
         {/* Skulltulas */}
         <div 
