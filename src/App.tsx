@@ -6,6 +6,7 @@ import { SkulltulaTracker } from './components/SkulltulaTracker';
 import { HeartTracker } from './components/HeartTracker';
 import { SongBook } from './components/SongBook';
 import { StoryTimeline } from './components/StoryTimeline';
+import { HyruleMap } from './components/HyruleMap';
 
 import { SKULLTULAS_DATA } from './data/skulltulas';
 import { HEART_PIECES_DATA } from './data/heartPieces';
@@ -164,6 +165,17 @@ export function App() {
             milestones={STORY_MILESTONES_DATA}
             completedEventKeys={completedEvents}
             onToggle={handleToggleEvent}
+          />
+        )}
+
+        {activeTab === 'map' && (
+          <HyruleMap
+            skulltulas={SKULLTULAS_DATA}
+            collectedSkulltulaIds={collectedSkulltulas}
+            onToggleSkulltula={handleToggleSkulltula}
+            heartPieces={HEART_PIECES_DATA}
+            collectedHeartIds={collectedHearts}
+            onToggleHeartPiece={handleToggleHeart}
           />
         )}
       </main>

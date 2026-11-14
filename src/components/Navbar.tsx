@@ -8,7 +8,8 @@ import {
   Sparkles,
   Settings,
   CloudCheck,
-  Radio
+  Radio,
+  Map
 } from 'lucide-react';
 import { LiveGameState, NeonConfig } from '../types';
 
@@ -27,6 +28,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 }) => {
   const tabs = [
     { id: 'dashboard', label: 'Painel', shortLabel: 'Início', icon: Sparkles },
+    { id: 'map', label: 'Mapa', shortLabel: 'Mapa', icon: Map },
     { id: 'journal', label: 'Diário de Bordo', shortLabel: 'Diário', icon: Scroll },
     { id: 'skulltulas', label: 'Skulltulas', shortLabel: 'Skulltulas', icon: Bug, count: '100' },
     { id: 'hearts', label: 'Corações', shortLabel: 'Corações', icon: Heart, count: '36' },

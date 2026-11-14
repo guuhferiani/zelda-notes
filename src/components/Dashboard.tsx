@@ -15,7 +15,8 @@ import {
   Settings,
   ShieldCheck,
   BookOpen,
-  ScrollText
+  ScrollText,
+  Map
 } from 'lucide-react';
 import { LiveGameState, Note } from '../types';
 
@@ -111,8 +112,16 @@ export const Dashboard: React.FC<DashboardProps> = ({
           <span className="text-[11px] text-gray-400">Ocarina of Time</span>
         </div>
 
-        <div className="grid grid-cols-3 sm:grid-cols-5 gap-4 sm:gap-5">
+        <div className="grid grid-cols-3 sm:grid-cols-6 gap-4 sm:gap-5">
           {[
+            {
+              id: 'map',
+              label: 'Mapa',
+              badge: `${Math.round(((collectedSkulltulasCount + collectedHeartsCount) / 136) * 100)}%`,
+              icon: Map,
+              parchment: false,
+              iconColor: 'text-[#e2c779]'
+            },
             {
               id: 'journal',
               label: 'Diário de Bordo',
