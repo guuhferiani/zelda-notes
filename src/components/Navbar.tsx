@@ -60,9 +60,6 @@ export const Navbar: React.FC<NavbarProps> = ({
                   <span className="font-hylian text-base sm:text-lg font-bold tracking-wider bg-gradient-to-r from-amber-200 via-sheikah-gold to-yellow-500 bg-clip-text text-transparent uppercase">
                     Zelda Notes
                   </span>
-                  <span className="text-[10px] tracking-wider uppercase font-semibold bg-sheikah-card text-emerald-400 px-2 py-0.5 rounded-full border border-emerald-500/30">
-                    OoT
-                  </span>
                 </div>
                 <p className="text-[11px] text-zinc-400 font-medium hidden sm:block">
                   Nintendo Companion • Hyrule Journal
