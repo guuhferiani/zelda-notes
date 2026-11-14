@@ -13,10 +13,7 @@ import {
   Database,
   Trophy,
   Settings,
-  ShieldCheck,
-  BookOpen,
-  ScrollText,
-  Map
+  ShieldCheck
 } from 'lucide-react';
 import { LiveGameState, Note } from '../types';
 
@@ -104,92 +101,145 @@ export const Dashboard: React.FC<DashboardProps> = ({
       </div>
 
       {/* Menu Principal estilo Zelda Notes Oficial */}
-      <div className="rounded-2xl bg-gradient-to-b from-[#1a1611] to-[#12100d] border border-[#c8a962]/30 p-5 sm:p-6 shadow-xl">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-sm font-bold uppercase tracking-widest text-[#e2c779] font-hylian">
-            Menu Principal
-          </h2>
-          <span className="text-[11px] text-gray-400">Ocarina of Time</span>
+      <div className="rounded-2xl bg-gradient-to-b from-[#1d1711] via-[#15110c] to-[#0f0c08] border border-[#c8a962]/40 p-5 sm:p-8 shadow-2xl">
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <span className="text-[10px] uppercase tracking-widest text-[#c8a962]/80 font-semibold block">
+              The Legend of Zelda: Ocarina of Time
+            </span>
+            <h2 className="text-base sm:text-lg font-bold uppercase tracking-widest text-[#f0d98c] font-hylian">
+              Menu Principal
+            </h2>
+          </div>
+          <span className="text-xs text-[#c8a962]/70 font-medium hidden sm:inline">Zelda Notes</span>
         </div>
 
-        <div className="grid grid-cols-3 sm:grid-cols-6 gap-4 sm:gap-5">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-5 sm:gap-7 max-w-3xl mx-auto">
           {[
             {
               id: 'map',
               label: 'Mapa',
               badge: `${Math.round(((collectedSkulltulasCount + collectedHeartsCount) / 136) * 100)}%`,
-              icon: Map,
-              parchment: false,
-              iconColor: 'text-[#e2c779]'
+              bg: 'bg-[radial-gradient(circle_at_center,#c9a255_0%,#9e7632_65%,#7a571f_100%)]',
+              emblem: (
+                <svg viewBox="0 0 64 64" className="w-16 h-16 sm:w-20 sm:h-20 drop-shadow-[0_4px_8px_rgba(0,0,0,0.45)]">
+                  <polygon points="48,14 28,50 26,34 12,28" fill="#b91c1c" stroke="#fef3c7" strokeWidth="2.5" strokeLinejoin="round" />
+                  <polygon points="48,14 26,34 12,28" fill="#ef4444" opacity="0.85" />
+                </svg>
+              )
             },
             {
               id: 'journal',
               label: 'Diário de Bordo',
               badge: `${notes.length}`,
-              icon: BookOpen,
-              parchment: true,
-              iconColor: 'text-[#5c3d1e]'
+              bg: 'bg-[radial-gradient(circle_at_center,#f5ecd0_0%,#dfd0a2_65%,#bfa76a_100%)]',
+              emblem: (
+                <svg viewBox="0 0 64 64" className="w-16 h-16 sm:w-20 sm:h-20 drop-shadow-[0_4px_8px_rgba(0,0,0,0.3)]">
+                  <rect x="16" y="12" width="32" height="40" rx="4" fill="#fffbeb" stroke="#78350f" strokeWidth="2.5" />
+                  <line x1="23" y1="22" x2="41" y2="22" stroke="#92400e" strokeWidth="2.5" strokeLinecap="round" />
+                  <line x1="23" y1="30" x2="41" y2="30" stroke="#92400e" strokeWidth="2.5" strokeLinecap="round" />
+                  <line x1="23" y1="38" x2="34" y2="38" stroke="#92400e" strokeWidth="2.5" strokeLinecap="round" />
+                  <circle cx="42" cy="44" r="6" fill="#b91c1c" stroke="#450a0a" strokeWidth="1.5" />
+                </svg>
+              )
             },
             {
               id: 'skulltulas',
               label: 'Skulltulas',
               badge: `${collectedSkulltulasCount}/100`,
-              icon: Bug,
-              parchment: false,
-              iconColor: 'text-[#e2c779]'
+              bg: 'bg-[radial-gradient(circle_at_center,#292118_0%,#18130d_70%,#0e0b08_100%)]',
+              emblem: (
+                <svg viewBox="0 0 64 64" className="w-16 h-16 sm:w-20 sm:h-20 drop-shadow-[0_4px_10px_rgba(234,179,8,0.35)]">
+                  <circle cx="32" cy="34" r="14" fill="#eab308" stroke="#713f12" strokeWidth="2.5" />
+                  <circle cx="27" cy="31" r="3" fill="#dc2626" />
+                  <circle cx="37" cy="31" r="3" fill="#dc2626" />
+                  <path d="M26,40 H38 M29,37 V43 M32,37 V43 M35,37 V43" stroke="#422006" strokeWidth="2" strokeLinecap="round" />
+                  <path d="M18,26 L11,18 M16,34 L8,34 M18,42 L11,50 M46,26 L53,18 M48,34 L56,34 M46,42 L53,50" stroke="#facc15" strokeWidth="2.5" strokeLinecap="round" />
+                </svg>
+              )
             },
             {
               id: 'hearts',
               label: 'Corações',
               badge: `${collectedHeartsCount}/36`,
-              icon: Heart,
-              parchment: true,
-              iconColor: 'text-red-700'
+              bg: 'bg-[radial-gradient(circle_at_center,#f5ecd0_0%,#dfd0a2_65%,#bfa76a_100%)]',
+              emblem: (
+                <svg viewBox="0 0 64 64" className="w-16 h-16 sm:w-20 sm:h-20 drop-shadow-[0_4px_8px_rgba(185,28,28,0.35)]">
+                  <path
+                    d="M32 52 C32 52 10 38 10 22 C10 14.5 16 10 22.5 10 C27 10 30.5 12.5 32 16 C33.5 12.5 37 10 41.5 10 C48 10 54 14.5 54 22 C54 38 32 52 32 52 Z"
+                    fill="#dc2626"
+                    stroke="#fef3c7"
+                    strokeWidth="2.5"
+                    strokeLinejoin="round"
+                  />
+                  <path d="M18 19 C18 16 21 14 24 14" stroke="#fca5a5" strokeWidth="2.5" strokeLinecap="round" fill="none" />
+                </svg>
+              )
             },
             {
               id: 'songs',
               label: 'Ocarina',
               badge: `${learnedSongsCount}/12`,
-              icon: Music,
-              parchment: false,
-              iconColor: 'text-sky-300'
+              bg: 'bg-[radial-gradient(circle_at_center,#1b2432_0%,#11161f_70%,#0a0d12_100%)]',
+              emblem: (
+                <svg viewBox="0 0 64 64" className="w-16 h-16 sm:w-20 sm:h-20 drop-shadow-[0_4px_10px_rgba(56,189,248,0.35)]">
+                  <path
+                    d="M14 40 C10 33 15 24 26 20 C38 16 50 18 52 25 C54 31 46 37 36 40 L24 48 C19 51 16 46 14 40 Z"
+                    fill="#1d4ed8"
+                    stroke="#93c5fd"
+                    strokeWidth="2.2"
+                  />
+                  <rect x="33" y="21" width="5" height="17" rx="1" transform="rotate(-14 35 29)" fill="#e2e8f0" />
+                  <circle cx="22" cy="31" r="2" fill="#e0f2fe" />
+                  <circle cx="28" cy="28" r="2" fill="#e0f2fe" />
+                  <circle cx="43" cy="26" r="2" fill="#e0f2fe" />
+                </svg>
+              )
             },
             {
               id: 'timeline',
               label: 'História',
               badge: `${completedEventsCount}/16`,
-              icon: ScrollText,
-              parchment: true,
-              iconColor: 'text-[#4a3518]'
+              bg: 'bg-[radial-gradient(circle_at_center,#c9a255_0%,#9e7632_65%,#7a571f_100%)]',
+              emblem: (
+                <svg viewBox="0 0 64 64" className="w-16 h-16 sm:w-20 sm:h-20 drop-shadow-[0_4px_8px_rgba(0,0,0,0.4)]">
+                  <polygon points="32,12 42,30 22,30" fill="#fef08a" stroke="#78350f" strokeWidth="2" strokeLinejoin="round" />
+                  <polygon points="22,30 32,48 12,48" fill="#fde047" stroke="#78350f" strokeWidth="2" strokeLinejoin="round" />
+                  <polygon points="42,30 52,48 32,48" fill="#facc15" stroke="#78350f" strokeWidth="2" strokeLinejoin="round" />
+                </svg>
+              )
             }
-          ].map((tile) => {
-            const Icon = tile.icon;
-            return (
-              <button
-                key={tile.id}
-                type="button"
-                onClick={() => onNavigate(tile.id)}
-                className="group flex flex-col items-center gap-2 focus:outline-none"
+          ].map((tile) => (
+            <button
+              key={tile.id}
+              type="button"
+              onClick={() => onNavigate(tile.id)}
+              className="group flex flex-col items-center gap-2.5 focus:outline-none"
+            >
+              <div
+                className={`relative w-full aspect-square rounded-2xl border-2 border-[#d4af37] shadow-[0_10px_25px_-5px_rgba(0,0,0,0.7)] flex items-center justify-center transition-all duration-200 group-hover:scale-[1.04] group-hover:border-[#fef08a] group-hover:shadow-[0_0_24px_rgba(212,175,55,0.35)] group-active:scale-95 overflow-hidden ${tile.bg}`}
               >
-                <div
-                  className={`relative w-full aspect-square rounded-xl border-2 border-[#c8a962] shadow-lg flex items-center justify-center transition-all duration-200 group-hover:scale-105 group-hover:border-[#f0d98c] group-active:scale-95 ${
-                    tile.parchment
-                      ? 'bg-gradient-to-br from-[#e9dcb8] via-[#d7c28e] to-[#b59754]'
-                      : 'bg-gradient-to-br from-[#211c15] via-[#17130e] to-[#0f0c09]'
-                  }`}
-                >
-                  <div className="absolute inset-1 rounded-lg border border-black/20 pointer-events-none" />
-                  <Icon className={`w-9 h-9 sm:w-11 sm:h-11 ${tile.iconColor} drop-shadow`} />
-                  <span className="absolute bottom-1.5 right-1.5 px-1.5 py-0.5 rounded bg-black/70 text-[10px] font-mono font-semibold text-[#f0d98c] border border-[#c8a962]/40">
-                    {tile.badge}
-                  </span>
+                {/* Moldura interna estilo pergaminho Zelda */}
+                <div className="absolute inset-1.5 rounded-xl border border-[#f5e1a4]/35 pointer-events-none" />
+                {/* Ornamentos nos 4 cantos */}
+                <span className="absolute top-2 left-2 w-2.5 h-2.5 border-t-2 border-l-2 border-[#f5e1a4]/60 rounded-tl-sm pointer-events-none" />
+                <span className="absolute top-2 right-2 w-2.5 h-2.5 border-t-2 border-r-2 border-[#f5e1a4]/60 rounded-tr-sm pointer-events-none" />
+                <span className="absolute bottom-2 left-2 w-2.5 h-2.5 border-b-2 border-l-2 border-[#f5e1a4]/60 rounded-bl-sm pointer-events-none" />
+                <span className="absolute bottom-2 right-2 w-2.5 h-2.5 border-b-2 border-r-2 border-[#f5e1a4]/60 rounded-br-sm pointer-events-none" />
+
+                <div className="transform transition-transform duration-200 group-hover:scale-110">
+                  {tile.emblem}
                 </div>
-                <span className="text-xs sm:text-sm font-semibold text-gray-200 group-hover:text-[#f0d98c] transition-colors text-center leading-tight">
-                  {tile.label}
+
+                <span className="absolute bottom-2.5 right-2.5 px-2 py-0.5 rounded-md bg-black/75 text-[11px] font-mono font-bold text-[#f5e1a4] border border-[#c8a962]/50 shadow">
+                  {tile.badge}
                 </span>
-              </button>
-            );
-          })}
+              </div>
+              <span className="text-sm sm:text-base font-semibold text-gray-100 group-hover:text-[#f5e1a4] transition-colors text-center leading-tight tracking-wide">
+                {tile.label}
+              </span>
+            </button>
+          ))}
         </div>
       </div>
 
