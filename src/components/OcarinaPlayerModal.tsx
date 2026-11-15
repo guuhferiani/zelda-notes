@@ -15,12 +15,17 @@ import {
   buildIntroScoreFromButtons,
   playOcarinaPitch,
 } from '../utils/ocarinaAudio';
+import {
+  ResolvedController,
+  getControllerPrompt,
+} from '../utils/controllerMapping';
 
 interface OcarinaPlayerModalProps {
   song: OcarinaSong;
   isLearned: boolean;
   onToggleLearned: (songId: string) => void;
   onClose: () => void;
+  controllerLayout?: ResolvedController;
 }
 
 type VersionMode = 'beginning' | 'full';
@@ -127,7 +132,32 @@ export const OcarinaPlayerModal: React.FC<OcarinaPlayerModalProps> = ({
   isLearned,
   onToggleLearned,
   onClose,
+  controllerLayout = 'n64',
 }) => {
+  const controllerRows = useMemo(
+    () =>
+      CONTROLLER_ROWS.map((row) => {
+        const prompt = getControllerPrompt(row.button, controllerLayout);
+        return {
+          ...row,
+          symbol: prompt.symbol,
+          name: prompt.shortName,
+          badgeClass: prompt.badgeClass,
+        };
+      }),
+    [controllerLayout]
+  );
+
+  const buttonSymbol = useMemo(
+    () => ({
+      UP: getControllerPrompt('UP', controllerLayout).symbol,
+      LEFT: getControllerPrompt('LEFT', controllerLayout).symbol,
+      RIGHT: getControllerPrompt('RIGHT', controllerLayout).symbol,
+      DOWN: getControllerPrompt('DOWN', controllerLayout).symbol,
+      A: getControllerPrompt('A', controllerLayout).symbol,
+    }),
+    [controllerLayout]
+  );
   const [versionMode, setVersionMode] = useState<VersionMode>('full');
   const [isGuided, setIsGuided] = useState(false);
   const [isPlaying, setIsPlaying] = useState(true);
@@ -595,7 +625,7 @@ export const OcarinaPlayerModal: React.FC<OcarinaPlayerModalProps> = ({
         <div className="relative h-[225px] sm:h-[250px] shrink-0 bg-[#120d0a] border-t border-white/10 overflow-hidden select-none">
           {/* Eixo esquerdo com os ícones dos botões (▲, ◀, ▶, ▼, A) */}
           <div className="absolute left-0 top-0 bottom-0 w-11 z-20 bg-[#120d0a]/95 border-r border-white/10 flex flex-col">
-            {CONTROLLER_ROWS.map((row, idx) => {
+            {controllerRows.map((row, idx) => {
               const isRowActive = activeRowIndex === idx;
               return (
                 <button
@@ -622,7 +652,7 @@ export const OcarinaPlayerModal: React.FC<OcarinaPlayerModalProps> = ({
           <div className="relative h-full ml-11">
             {/* Linhas horizontais da grade */}
             <div className="absolute inset-0 flex flex-col pointer-events-none">
-              {CONTROLLER_ROWS.map((row, idx) => (
+              {controllerRows.map((row, idx) => (
                 <div
                   key={row.button}
                   className={`flex-1 border-b border-white/[0.07] ${
@@ -692,7 +722,7 @@ export const OcarinaPlayerModal: React.FC<OcarinaPlayerModalProps> = ({
                           : 'bg-amber-500 text-[#1b140d] border border-amber-300'
                       }`}
                     >
-                      {BUTTON_SYMBOL[btn]}
+                      {buttonSymbol[btn]}
                     </span>
                   </div>
                 );
@@ -711,7 +741,7 @@ export const OcarinaPlayerModal: React.FC<OcarinaPlayerModalProps> = ({
                   className="absolute -left-[6px] w-3.5 h-3.5 rotate-45 bg-amber-300 border border-white shadow-[0_0_14px_rgba(253,224,71,1)]"
                   style={{
                     top: `calc(${
-                      ((activeRowIndex + 0.5) / CONTROLLER_ROWS.length) * 100
+                      ((activeRowIndex + 0.5) / controllerRows.length) * 100
                     }% - 7px)`,
                   }}
                 />
@@ -726,7 +756,7 @@ export const OcarinaPlayerModal: React.FC<OcarinaPlayerModalProps> = ({
             <div className="text-center text-[11px] text-amber-300 font-semibold mb-2 animate-pulse">
               Aperte o botão{' '}
               {
-                BUTTON_SYMBOL[
+                buttonSymbol[
                   score[waitingNoteIdx].button ??
                     PITCH_TO_BUTTON[score[waitingNoteIdx].pitch]
                 ]
@@ -736,11 +766,11 @@ export const OcarinaPlayerModal: React.FC<OcarinaPlayerModalProps> = ({
           )}
           <div className="flex items-center justify-center gap-3">
             {[
-              CONTROLLER_ROWS[4], // A
-              CONTROLLER_ROWS[3], // ▼
-              CONTROLLER_ROWS[2], // ▶
-              CONTROLLER_ROWS[1], // ◀
-              CONTROLLER_ROWS[0], // ▲
+              controllerRows[4], // A
+              controllerRows[3], // ▼
+              controllerRows[2], // ▶
+              controllerRows[1], // ◀
+              controllerRows[0], // ▲
             ].map((ctrl) => {
               const waiting =
                 isGuided && waitingNoteIdx !== null && score[waitingNoteIdx];

@@ -1,8 +1,13 @@
 import React, { useState } from 'react';
-import { Music, CheckCircle2, Circle, Volume2 } from 'lucide-react';
+import { Music, CheckCircle2, Circle, Volume2, Gamepad2 } from 'lucide-react';
 import { OcarinaButton, OcarinaSong } from '../types';
 import { playOcarinaButton } from '../utils/ocarinaAudio';
 import { OcarinaPlayerModal } from './OcarinaPlayerModal';
+import {
+  useControllerLayout,
+  getControllerPrompt,
+  ControllerPreference,
+} from '../utils/controllerMapping';
 
 interface SongBookProps {
   songs: OcarinaSong[];
@@ -16,55 +21,21 @@ export const SongBook: React.FC<SongBookProps> = ({
   onToggle,
 }) => {
   const [activePlayerSong, setActivePlayerSong] = useState<OcarinaSong | null>(null);
+  const { preference, setPreference, detectedGamepad, resolvedLayout } = useControllerLayout();
 
   const warpSongs = songs.filter((s) => s.category === 'warp');
   const magicSongs = songs.filter((s) => s.category !== 'warp');
 
   const renderNoteBadge = (note: OcarinaButton, idx: number) => {
-    const badgeConfig: Record<
-      OcarinaButton,
-      { label: string; title: string; className: string }
-    > = {
-      A: {
-        label: 'A',
-        title: 'Botão A (Azul)',
-        className: 'bg-blue-600 hover:bg-blue-500 text-white border-blue-400',
-      },
-      UP: {
-        label: '▲',
-        title: 'C-Cima (Amarelo)',
-        className:
-          'bg-amber-500 hover:bg-amber-400 text-sheikah-darkest border-amber-300',
-      },
-      DOWN: {
-        label: '▼',
-        title: 'C-Baixo (Amarelo)',
-        className:
-          'bg-amber-500 hover:bg-amber-400 text-sheikah-darkest border-amber-300',
-      },
-      LEFT: {
-        label: '◀',
-        title: 'C-Esquerda (Amarelo)',
-        className:
-          'bg-amber-500 hover:bg-amber-400 text-sheikah-darkest border-amber-300',
-      },
-      RIGHT: {
-        label: '▶',
-        title: 'C-Direita (Amarelo)',
-        className:
-          'bg-amber-500 hover:bg-amber-400 text-sheikah-darkest border-amber-300',
-      },
-    };
-
-    const cfg = badgeConfig[note];
+    const cfg = getControllerPrompt(note, resolvedLayout);
     return (
       <span
         key={`${note}-${idx}`}
         onClick={() => playOcarinaButton(note)}
         title={cfg.title}
-        className={`w-7 h-7 rounded-full font-bold text-xs flex items-center justify-center shadow-md cursor-pointer border select-none active:scale-95 transition-transform ${cfg.className}`}
+        className={`min-w-7 h-7 px-1.5 rounded-full font-bold text-xs flex items-center justify-center shadow-md cursor-pointer border select-none active:scale-95 transition-transform ${cfg.badgeClass}`}
       >
-        {cfg.label}
+        {cfg.symbol}
       </span>
     );
   };
@@ -174,6 +145,53 @@ export const SongBook: React.FC<SongBookProps> = ({
             </div>
           </div>
         </div>
+
+        {/* Seletor de Padrão de Controle + Detecção Automática */}
+        <div className="mt-4 pt-4 border-t border-[#c8a962]/20 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <div className="flex items-center gap-2 text-xs text-gray-300">
+            <Gamepad2 className="w-4 h-4 text-[#e2c779] flex-shrink-0" />
+            <span>Padrão dos Botões:</span>
+            {detectedGamepad ? (
+              <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-950/70 text-emerald-300 border border-emerald-500/40">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                {detectedGamepad.type === 'ps5' ? 'PS5 DualSense detectado' : 'Controle Nintendo detectado'}
+              </span>
+            ) : (
+              <span className="text-[11px] text-gray-400">
+                {preference === 'auto'
+                  ? 'Nenhum controle USB/BT detectado (padrão N64)'
+                  : `Modo manual: ${resolvedLayout.toUpperCase()}`}
+              </span>
+            )}
+          </div>
+
+          <div className="inline-flex flex-wrap items-center gap-1 bg-sheikah-darkest/80 p-1 rounded-xl border border-sheikah-border">
+            {(
+              [
+                { id: 'auto', label: 'Auto' },
+                { id: 'ps5', label: 'PS5 (✕ ○ □ △)' },
+                { id: 'nintendo', label: 'Nintendo (A B X Y)' },
+                { id: 'n64', label: 'N64 (A ▲ ▼)' },
+              ] as { id: ControllerPreference; label: string }[]
+            ).map((opt) => {
+              const active = preference === opt.id;
+              return (
+                <button
+                  key={opt.id}
+                  type="button"
+                  onClick={() => setPreference(opt.id)}
+                  className={`px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                    active
+                      ? 'bg-[#c8a962] text-[#17120c] shadow'
+                      : 'text-gray-300 hover:text-white hover:bg-white/5'
+                  }`}
+                >
+                  {opt.label}
+                </button>
+              );
+            })}
+          </div>
+        </div>
       </div>
 
       {/* Seção 1: Músicas de Teleporte */}
@@ -211,6 +229,7 @@ export const SongBook: React.FC<SongBookProps> = ({
           isLearned={learnedSongIds.includes(activePlayerSong.id)}
           onToggleLearned={onToggle}
           onClose={() => setActivePlayerSong(null)}
+          controllerLayout={resolvedLayout}
         />
       )}
     </div>
