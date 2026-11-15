@@ -1,8 +1,8 @@
 import { LiveGameState } from '../types';
 
 export class GameSyncService {
-  // Defina como true quando quiser reativar a sincronização em tempo real com a bridge (/api/game-status)
-  private static readonly SYNC_ENABLED = false;
+  // Sincronização em tempo real com a bridge (/api/game-status)
+  private static readonly SYNC_ENABLED = true;
 
   private static listeners: ((state: LiveGameState) => void)[] = [];
   private static currentState: LiveGameState = {

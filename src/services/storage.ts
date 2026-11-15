@@ -19,8 +19,8 @@ export interface CloudData {
 }
 
 export class StorageService {
-  // Defina como false quando quiser reativar as chamadas ao backend (/api/sync)
-  private static readonly BACKEND_SYNC_PAUSED = true;
+  // Defina como true caso queira pausar as chamadas ao backend (/api/sync)
+  private static readonly BACKEND_SYNC_PAUSED = false;
 
   // ---- Configuração do Neon DB ----
   static getNeonConfig(): NeonConfig {
