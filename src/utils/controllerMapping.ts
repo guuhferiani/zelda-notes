@@ -116,27 +116,27 @@ export function getControllerPrompt(
   if (layout === 'ps5') {
     const map: Record<OcarinaButton, ControllerPrompt> = {
       A: {
-        symbol: '✕',
-        shortName: 'Botão ✕',
-        title: 'PS5: Botão ✕ (Cruz) — Nota A do N64',
+        symbol: '○',
+        shortName: 'Botão ○',
+        title: 'PS5: Botão ○ (Círculo) — Nota A (não fecha a Ocarina)',
         badgeClass: 'bg-blue-600 hover:bg-blue-500 text-white border-blue-400',
       },
       UP: {
-        symbol: '△',
-        shortName: 'R▲ / △',
-        title: 'PS5: Analógico Direito ▲ (ou △) — C-Cima',
+        symbol: 'R▲',
+        shortName: 'Analógico ▲',
+        title: 'PS5: Analógico Direito para Cima (R▲) — C-Cima',
         badgeClass: 'bg-amber-500 hover:bg-amber-400 text-sheikah-darkest border-amber-300',
       },
       LEFT: {
-        symbol: '□',
-        shortName: 'R◀ / □',
-        title: 'PS5: Analógico Direito ◀ (ou □) — C-Esquerda',
+        symbol: 'R◀',
+        shortName: 'Analógico ◀',
+        title: 'PS5: Analógico Direito para Esquerda (R◀) — C-Esquerda',
         badgeClass: 'bg-amber-500 hover:bg-amber-400 text-sheikah-darkest border-amber-300',
       },
       RIGHT: {
-        symbol: '○',
-        shortName: 'R▶ / ○',
-        title: 'PS5: Analógico Direito ▶ (ou ○) — C-Direita',
+        symbol: 'R▶',
+        shortName: 'Analógico ▶',
+        title: 'PS5: Analógico Direito para Direita (R▶) — C-Direita',
         badgeClass: 'bg-amber-500 hover:bg-amber-400 text-sheikah-darkest border-amber-300',
       },
       DOWN: {
@@ -152,27 +152,27 @@ export function getControllerPrompt(
   if (layout === 'nintendo') {
     const map: Record<OcarinaButton, ControllerPrompt> = {
       A: {
-        symbol: 'B',
-        shortName: 'Botão B',
-        title: 'Nintendo: Botão B — Nota A do N64',
+        symbol: 'A',
+        shortName: 'Botão A',
+        title: 'Nintendo: Botão A — Nota A (não fecha a Ocarina)',
         badgeClass: 'bg-blue-600 hover:bg-blue-500 text-white border-blue-400',
       },
       UP: {
-        symbol: 'X',
-        shortName: 'R▲ / X',
-        title: 'Nintendo: Analógico Direito ▲ (ou X) — C-Cima',
+        symbol: 'R▲',
+        shortName: 'Analógico ▲',
+        title: 'Nintendo: Analógico Direito para Cima (R▲) — C-Cima',
         badgeClass: 'bg-amber-500 hover:bg-amber-400 text-sheikah-darkest border-amber-300',
       },
       LEFT: {
-        symbol: 'Y',
-        shortName: 'R◀ / Y',
-        title: 'Nintendo: Analógico Direito ◀ (ou Y) — C-Esquerda',
+        symbol: 'R◀',
+        shortName: 'Analógico ◀',
+        title: 'Nintendo: Analógico Direito para Esquerda (R◀) — C-Esquerda',
         badgeClass: 'bg-amber-500 hover:bg-amber-400 text-sheikah-darkest border-amber-300',
       },
       RIGHT: {
-        symbol: 'A',
-        shortName: 'R▶ / A',
-        title: 'Nintendo: Analógico Direito ▶ (ou A) — C-Direita',
+        symbol: 'R▶',
+        shortName: 'Analógico ▶',
+        title: 'Nintendo: Analógico Direito para Direita (R▶) — C-Direita',
         badgeClass: 'bg-amber-500 hover:bg-amber-400 text-sheikah-darkest border-amber-300',
       },
       DOWN: {
