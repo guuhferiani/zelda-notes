@@ -169,8 +169,8 @@ export const SongBook: React.FC<SongBookProps> = ({
             {(
               [
                 { id: 'auto', label: 'Auto' },
-                { id: 'ps5', label: 'PS5 (○ + R▲▼)' },
-                { id: 'nintendo', label: 'Nintendo (A + R▲▼)' },
+                { id: 'ps5', label: 'PS5 (L1 R1 ○ □ △)' },
+                { id: 'nintendo', label: 'Nintendo (L R A Y X)' },
                 { id: 'n64', label: 'N64 (A ▲ ▼)' },
               ] as { id: ControllerPreference; label: string }[]
             ).map((opt) => {

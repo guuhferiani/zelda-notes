@@ -116,33 +116,33 @@ export function getControllerPrompt(
   if (layout === 'ps5') {
     const map: Record<OcarinaButton, ControllerPrompt> = {
       A: {
-        symbol: '○',
-        shortName: 'Botão ○',
-        title: 'PS5: Botão ○ (Círculo) — Nota A (não fecha a Ocarina)',
+        symbol: 'L1',
+        shortName: 'Botão L1',
+        title: 'PS5: L1 — Nota mais grave (A do N64)',
         badgeClass: 'bg-blue-600 hover:bg-blue-500 text-white border-blue-400',
       },
-      UP: {
-        symbol: 'R▲',
-        shortName: 'Analógico ▲',
-        title: 'PS5: Analógico Direito para Cima (R▲) — C-Cima',
-        badgeClass: 'bg-amber-500 hover:bg-amber-400 text-sheikah-darkest border-amber-300',
-      },
-      LEFT: {
-        symbol: 'R◀',
-        shortName: 'Analógico ◀',
-        title: 'PS5: Analógico Direito para Esquerda (R◀) — C-Esquerda',
+      DOWN: {
+        symbol: 'R1',
+        shortName: 'Botão R1',
+        title: 'PS5: R1 — C-Baixo',
         badgeClass: 'bg-amber-500 hover:bg-amber-400 text-sheikah-darkest border-amber-300',
       },
       RIGHT: {
-        symbol: 'R▶',
-        shortName: 'Analógico ▶',
-        title: 'PS5: Analógico Direito para Direita (R▶) — C-Direita',
+        symbol: '○',
+        shortName: 'Botão ○',
+        title: 'PS5: ○ (Círculo) — C-Direita',
         badgeClass: 'bg-amber-500 hover:bg-amber-400 text-sheikah-darkest border-amber-300',
       },
-      DOWN: {
-        symbol: 'R▼',
-        shortName: 'Analógico ▼',
-        title: 'PS5: Analógico Direito para Baixo (R▼) — C-Baixo',
+      LEFT: {
+        symbol: '□',
+        shortName: 'Botão □',
+        title: 'PS5: □ (Quadrado) — C-Esquerda',
+        badgeClass: 'bg-amber-500 hover:bg-amber-400 text-sheikah-darkest border-amber-300',
+      },
+      UP: {
+        symbol: '△',
+        shortName: 'Botão △',
+        title: 'PS5: △ (Triângulo) — C-Cima',
         badgeClass: 'bg-amber-500 hover:bg-amber-400 text-sheikah-darkest border-amber-300',
       },
     };
@@ -152,33 +152,33 @@ export function getControllerPrompt(
   if (layout === 'nintendo') {
     const map: Record<OcarinaButton, ControllerPrompt> = {
       A: {
-        symbol: 'A',
-        shortName: 'Botão A',
-        title: 'Nintendo: Botão A — Nota A (não fecha a Ocarina)',
+        symbol: 'L',
+        shortName: 'Botão L',
+        title: 'Nintendo: L — Nota mais grave (A do N64)',
         badgeClass: 'bg-blue-600 hover:bg-blue-500 text-white border-blue-400',
       },
-      UP: {
-        symbol: 'R▲',
-        shortName: 'Analógico ▲',
-        title: 'Nintendo: Analógico Direito para Cima (R▲) — C-Cima',
-        badgeClass: 'bg-amber-500 hover:bg-amber-400 text-sheikah-darkest border-amber-300',
-      },
-      LEFT: {
-        symbol: 'R◀',
-        shortName: 'Analógico ◀',
-        title: 'Nintendo: Analógico Direito para Esquerda (R◀) — C-Esquerda',
+      DOWN: {
+        symbol: 'R',
+        shortName: 'Botão R',
+        title: 'Nintendo: R — C-Baixo',
         badgeClass: 'bg-amber-500 hover:bg-amber-400 text-sheikah-darkest border-amber-300',
       },
       RIGHT: {
-        symbol: 'R▶',
-        shortName: 'Analógico ▶',
-        title: 'Nintendo: Analógico Direito para Direita (R▶) — C-Direita',
+        symbol: 'A',
+        shortName: 'Botão A',
+        title: 'Nintendo: A — C-Direita',
         badgeClass: 'bg-amber-500 hover:bg-amber-400 text-sheikah-darkest border-amber-300',
       },
-      DOWN: {
-        symbol: 'R▼',
-        shortName: 'Analógico ▼',
-        title: 'Nintendo: Analógico Direito para Baixo (R▼) — C-Baixo',
+      LEFT: {
+        symbol: 'Y',
+        shortName: 'Botão Y',
+        title: 'Nintendo: Y — C-Esquerda',
+        badgeClass: 'bg-amber-500 hover:bg-amber-400 text-sheikah-darkest border-amber-300',
+      },
+      UP: {
+        symbol: 'X',
+        shortName: 'Botão X',
+        title: 'Nintendo: X — C-Cima',
         badgeClass: 'bg-amber-500 hover:bg-amber-400 text-sheikah-darkest border-amber-300',
       },
     };
