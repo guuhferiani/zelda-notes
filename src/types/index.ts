@@ -69,6 +69,8 @@ export interface StoryMilestone {
   key: string;
   title: string;
   description: string;
+  objective?: string;
+  objectiveHighlight?: string;
   category: 'child' | 'adult';
   order: number;
   isCompleted?: boolean;

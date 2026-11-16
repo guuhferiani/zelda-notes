@@ -33,7 +33,7 @@ export const Navbar: React.FC<NavbarProps> = ({
     { id: 'skulltulas', label: 'Skulltulas', shortLabel: 'Skulltulas', icon: Bug, count: '100' },
     { id: 'hearts', label: 'Corações', shortLabel: 'Corações', icon: Heart, count: '36' },
     { id: 'songs', label: 'Canções', shortLabel: 'Canções', icon: Music, count: '12' },
-    { id: 'timeline', label: 'Linha do Tempo', shortLabel: 'História', icon: MapPin }
+    { id: 'timeline', label: 'Trama do Tempo', shortLabel: 'Trama', icon: MapPin }
   ];
 
   return (

@@ -225,7 +225,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
     },
     {
       id: 'timeline',
-      label: 'História',
+      label: 'Trama do Tempo',
       badge: `${completedEventsCount}/16`,
       bg: 'bg-[radial-gradient(circle_at_center,#2d2113_0%,#19120a_70%,#0d0905_100%)]',
       emblem: (
