@@ -427,9 +427,9 @@ export const OcarinaPlayerModal: React.FC<OcarinaPlayerModalProps> = ({
 
           <div className="text-center">
             <h3 className="text-base sm:text-lg font-bold text-white font-hylian tracking-wide">
-              {song.name}
+              {song.namePt}
             </h3>
-            <p className="text-[11px] text-[#c8a962]">{song.namePt}</p>
+            <p className="text-[11px] text-[#c8a962]">{song.name}</p>
           </div>
 
           <button
@@ -547,7 +547,7 @@ export const OcarinaPlayerModal: React.FC<OcarinaPlayerModalProps> = ({
                     : 'bg-amber-500 text-sheikah-darkest border-amber-200'
                 }`}
               >
-                {BUTTON_SYMBOL[activeButton]}
+                {buttonSymbol[activeButton]}
               </div>
             )}
           </div>

@@ -5,7 +5,7 @@ export const OCARINA_SONGS_DATA: OcarinaSong[] = [
   {
     id: 'zeldas-lullaby',
     name: "Zelda's Lullaby",
-    namePt: "Canção de Ninar de Zelda",
+    namePt: "Acalanto da Zelda",
     notes: ['LEFT', 'UP', 'RIGHT', 'LEFT', 'UP', 'RIGHT'],
     introScore: [
       { pitch: 'B4', start: 0.4, duration: 0.55, button: 'LEFT' },
@@ -39,7 +39,7 @@ export const OCARINA_SONGS_DATA: OcarinaSong[] = [
   {
     id: 'eponas-song',
     name: "Epona's Song",
-    namePt: "Canção de Epona",
+    namePt: "Canção da Epona",
     notes: ['UP', 'LEFT', 'RIGHT', 'UP', 'LEFT', 'RIGHT'],
     introScore: [
       { pitch: 'D5', start: 0.4, duration: 0.35, button: 'UP' },
@@ -69,7 +69,7 @@ export const OCARINA_SONGS_DATA: OcarinaSong[] = [
   {
     id: 'sarias-song',
     name: "Saria's Song",
-    namePt: "Canção de Saria",
+    namePt: "Canção da Saria",
     notes: ['DOWN', 'RIGHT', 'LEFT', 'DOWN', 'RIGHT', 'LEFT'],
     introScore: [
       { pitch: 'F4', start: 0.4, duration: 0.25, button: 'DOWN' },
@@ -102,7 +102,7 @@ export const OCARINA_SONGS_DATA: OcarinaSong[] = [
       { pitch: 'E4', start: 7.45, duration: 0.85 },
     ],
     effect: 'Permite conversar telepaticamente com Saria e anima Darunia para dançar.',
-    location: 'Ensinada por Saria no Sacred Forest Meadow.',
+    location: 'Ensinada por Saria na Campina Sagrada da Floresta.',
     category: 'magic'
   },
   {
@@ -235,7 +235,7 @@ export const OCARINA_SONGS_DATA: OcarinaSong[] = [
       { pitch: 'G4', start: 4.7, duration: 0.45 },
       { pitch: 'A4', start: 5.2, duration: 0.9, button: 'RIGHT' },
     ],
-    effect: 'Teleporta Link diretamente para a entrada do Templo da Floresta (Sacred Forest Meadow).',
+    effect: 'Teleporta Link diretamente para a entrada do Templo da Floresta (Campina Sagrada).',
     location: 'Ensinada por Sheik na entrada do Templo da Floresta.',
     category: 'warp'
   },
@@ -297,7 +297,7 @@ export const OCARINA_SONGS_DATA: OcarinaSong[] = [
       { pitch: 'A4', start: 4.78, duration: 0.95, button: 'RIGHT' },
     ],
     effect: 'Teleporta Link para a ilha acima do Templo da Água no Lago Hylia.',
-    location: 'Ensinada por Sheik na Caverna de Gelo (Ice Cavern).',
+    location: 'Ensinada por Sheik na Caverna de Gelo.',
     category: 'warp'
   },
   {

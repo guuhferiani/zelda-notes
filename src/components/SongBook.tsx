@@ -66,9 +66,9 @@ export const SongBook: React.FC<SongBookProps> = ({
         <div className="flex items-start justify-between gap-2">
           <div>
             <h4 className="font-bold text-white text-base font-hylian">
-              {song.name}
+              {song.namePt}
             </h4>
-            <span className="text-xs text-gray-400">{song.namePt}</span>
+            <span className="text-xs text-gray-400">{song.name}</span>
           </div>
 
           <div className="flex items-center gap-1.5">
@@ -197,7 +197,7 @@ export const SongBook: React.FC<SongBookProps> = ({
       {/* Seção 1: Músicas de Teleporte */}
       <div>
         <h3 className="text-sm font-bold uppercase tracking-wider text-sheikah-gold mb-3 flex items-center gap-2">
-          <span>Canções de Teleporte (Warp Songs)</span>
+          <span>Canções de Teleporte</span>
           <span className="text-xs font-normal text-gray-400">
             ({warpSongs.length})
           </span>

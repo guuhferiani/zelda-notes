@@ -19,13 +19,13 @@ export const STORY_MILESTONES_DATA: StoryMilestone[] = [
   {
     key: 'dodongos_cavern_cleared',
     title: 'A Caverna dos Dodongos',
-    description: 'Limpou a Caverna dos Dodongos, derrotou King Dodongo e recebeu o Rubi Goron de Darunia como Irmão de Sangue.',
+    description: 'Limpou a Caverna dos Dodongos, derrotou o Rei Dodongo e recebeu o Rubi Goron de Darunia como Irmão de Sangue.',
     category: 'child',
     order: 3
   },
   {
     key: 'jabu_jabu_cleared',
-    title: 'A Barriga de Lord Jabu-Jabu',
+    title: 'A Barriga do Lorde Jabu-Jabu',
     description: 'Resgatou a Princesa Ruto da barriga de Jabu-Jabu, venceu Barinade e recebeu a Safira Zora (o Anel de Noivado).',
     category: 'child',
     order: 4
@@ -49,7 +49,7 @@ export const STORY_MILESTONES_DATA: StoryMilestone[] = [
   {
     key: 'forest_temple_cleared',
     title: 'Templo da Floresta: Despertar de Saria',
-    description: 'Derrotou Phantom Ganon no Templo da Floresta e despertou Saria como a Sábia da Floresta (Medalhão da Floresta).',
+    description: 'Derrotou Ganon Fantasma no Templo da Floresta e despertou Saria como a Sábia da Floresta (Medalhão da Floresta).',
     category: 'adult',
     order: 7
   },
@@ -63,21 +63,21 @@ export const STORY_MILESTONES_DATA: StoryMilestone[] = [
   {
     key: 'ice_cavern_iron_boots',
     title: 'A Caverna de Gelo & Botas de Ferro',
-    description: 'Conquistou as Iron Boots e a Serenata da Água no labirinto congelado da Caverna de Gelo.',
+    description: 'Conquistou as Botas de Ferro e a Serenata da Água no labirinto congelado da Caverna de Gelo.',
     category: 'adult',
     order: 9
   },
   {
     key: 'water_temple_cleared',
     title: 'Templo da Água: Despertar de Ruto',
-    description: 'Superou Dark Link e a ameba gigante Morpha no Templo da Água, despertando a Princesa Ruto como a Sábia da Água.',
+    description: 'Superou o Link Sombrio e a ameba gigante Morpha no Templo da Água, despertando a Princesa Ruto como a Sábia da Água.',
     category: 'adult',
     order: 10
   },
   {
     key: 'bottom_of_well_lens',
     title: 'O Fundo do Poço de Kakariko',
-    description: 'Drenou o poço da vila e recuperou a Lente da Verdade (Lens of Truth) das sombras do passado.',
+    description: 'Drenou o poço da vila e recuperou a Lente da Verdade das sombras do passado.',
     category: 'adult',
     order: 11
   },

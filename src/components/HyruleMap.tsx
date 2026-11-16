@@ -70,7 +70,7 @@ const MAP_ZONES: MapZone[] = [
   {
     id: 'death-mountain',
     label: 'Montanha da Morte',
-    subtitle: 'Goron City, Trilha, Cratera, Dodongo & Fire Temple',
+    subtitle: 'Cidade Goron, Trilha, Cratera, Dodongo e Templo do Fogo',
     regions: ['Death Mountain Trail', 'Goron City', 'Death Mountain Crater', 'Dodongos Cavern', 'Fire Temple'],
     songIds: ['bolero-of-fire'],
     milestoneKeys: ['dodongos_cavern_cleared', 'fire_temple_cleared'],
@@ -80,7 +80,7 @@ const MAP_ZONES: MapZone[] = [
   {
     id: 'castle-market',
     label: 'Castelo & Mercado',
-    subtitle: 'Market, Hyrule Castle & Outside Ganon Castle',
+    subtitle: 'Mercado, Castelo de Hyrule e Arredores do Castelo de Ganon',
     regions: ['Market', 'Hyrule Castle', 'Outside Ganon Castle'],
     songIds: ['zeldas-lullaby', 'song-of-time', 'prelude-of-light'],
     milestoneKeys: [
@@ -96,7 +96,7 @@ const MAP_ZONES: MapZone[] = [
   {
     id: 'kakariko',
     label: 'Kakariko & Cemitério',
-    subtitle: 'Kakariko, Graveyard, Poço & Shadow Temple',
+    subtitle: 'Vila Kakariko, Cemitério, Poço e Templo da Sombra',
     regions: ['Kakariko Village', 'Graveyard', 'Bottom of the Well', 'Shadow Temple'],
     songIds: ['suns-song', 'song-of-storms', 'nocturne-of-shadow'],
     milestoneKeys: ['bottom_of_well_lens', 'shadow_temple_cleared'],
@@ -106,7 +106,7 @@ const MAP_ZONES: MapZone[] = [
   {
     id: 'zora',
     label: 'Domínio Zora',
-    subtitle: 'Zora River, Domain, Fountain, Jabu-Jabu & Ice Cavern',
+    subtitle: 'Rio Zora, Domínio, Fonte, Jabu-Jabu e Caverna de Gelo',
     regions: ['Zoras River', 'Zoras Domain', 'Zoras Fountain', 'Inside Jabu-Jabu', 'Ice Cavern'],
     songIds: ['serenade-of-water'],
     milestoneKeys: ['jabu_jabu_cleared', 'ice_cavern_iron_boots'],
@@ -116,7 +116,7 @@ const MAP_ZONES: MapZone[] = [
   {
     id: 'gerudo',
     label: 'Deserto & Vale Gerudo',
-    subtitle: 'Gerudo Valley, Fortress, Wasteland, Colossus & Spirit Temple',
+    subtitle: 'Vale Gerudo, Fortaleza, Deserto, Colosso e Templo do Espírito',
     regions: ['Gerudo Valley', 'Gerudo Fortress', 'Haunted Wasteland', 'Desert Colossus', 'Spirit Temple'],
     songIds: ['requiem-of-spirit'],
     milestoneKeys: ['gerudo_fortress_rescued', 'spirit_temple_cleared'],
@@ -126,7 +126,7 @@ const MAP_ZONES: MapZone[] = [
   {
     id: 'hyrule-field',
     label: 'Planície & Rancho',
-    subtitle: 'Hyrule Field & Lon Lon Ranch',
+    subtitle: 'Campos de Hyrule e Rancho Lon Lon',
     regions: ['Hyrule Field', 'Lon Lon Ranch'],
     songIds: ['eponas-song'],
     milestoneKeys: [],
@@ -136,7 +136,7 @@ const MAP_ZONES: MapZone[] = [
   {
     id: 'lost-woods',
     label: 'Floresta Kokiri',
-    subtitle: 'Kokiri Forest, Deku Tree, Lost Woods & Forest Temple',
+    subtitle: 'Floresta Kokiri, Árvore Deku, Floresta Perdida e Templo da Floresta',
     regions: ['Kokiri Forest', 'Inside the Deku Tree', 'Lost Woods', 'Sacred Forest Meadow', 'Forest Temple'],
     songIds: ['sarias-song', 'minuet-of-forest'],
     milestoneKeys: ['deku_tree_cleared', 'forest_temple_cleared'],
@@ -146,7 +146,7 @@ const MAP_ZONES: MapZone[] = [
   {
     id: 'lake-hylia',
     label: 'Lago Hylia',
-    subtitle: 'Lake Hylia & Water Temple',
+    subtitle: 'Lago Hylia e Templo da Água',
     regions: ['Lake Hylia', 'Water Temple'],
     songIds: [],
     milestoneKeys: ['water_temple_cleared'],
