@@ -16,7 +16,9 @@ import {
   User,
   Eye,
   EyeOff,
-  SlidersHorizontal
+  SlidersHorizontal,
+  Maximize2,
+  Minimize2
 } from 'lucide-react';
 import { SkulltulaItem, HeartPieceItem, OcarinaSong, StoryMilestone } from '../types';
 
@@ -200,9 +202,12 @@ export const HyruleMap: React.FC<HyruleMapProps> = ({
     milestones: true
   });
 
-  const [zoom, setZoom] = useState<number>(1);
+  const [zoom, setZoom] = useState<number>(1.35);
   const [pan, setPan] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState<boolean>(false);
+  const [isExpanded, setIsExpanded] = useState<boolean>(false);
+  const [viewMode, setViewMode] = useState<'world' | 'local'>('world');
+  const [showFogClouds, setShowFogClouds] = useState<boolean>(true);
 
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const detailsPanelRef = useRef<HTMLDivElement>(null);
@@ -285,9 +290,31 @@ export const HyruleMap: React.FC<HyruleMapProps> = ({
   }, [clampPan]);
 
   const handleResetView = () => {
-    setZoom(1);
+    setViewMode('world');
+    setZoom(1.2);
     setPan({ x: 0, y: 0 });
   };
+
+  const handleEnterLocalMap = (zone: MapZone) => {
+    setSelectedZoneId(zone.id);
+    setViewMode('local');
+    focusMapPoint(zone.x, zone.y, 2.8);
+  };
+
+  const handleBackToWorldMap = () => {
+    setViewMode('world');
+    setZoom(1.15);
+    setPan({ x: 0, y: 0 });
+  };
+
+  useEffect(() => {
+    if (!isExpanded) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setIsExpanded(false);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [isExpanded]);
 
   const focusMapPoint = useCallback(
     (xPct: number, yPct: number, minZoom: number) => {
@@ -510,24 +537,47 @@ export const HyruleMap: React.FC<HyruleMapProps> = ({
           onPointerUp={handlePointerEnd}
           onPointerCancel={handlePointerEnd}
           onDoubleClick={handleDoubleClick}
-          className="lg:col-span-7 relative rounded-2xl border-2 border-[#c8a962]/70 bg-[#1a140e] overflow-hidden shadow-2xl aspect-[4/3] select-none touch-none cursor-grab active:cursor-grabbing"
+          className={`${
+            isExpanded
+              ? 'fixed inset-0 z-50 rounded-none border-0'
+              : 'lg:col-span-7 relative rounded-2xl border-2 border-[#c8a962]/70 aspect-[4/3]'
+          } bg-[#1a140e] overflow-hidden shadow-2xl select-none touch-none cursor-grab active:cursor-grabbing`}
         >
-          {/* Botão Dia / Noite no canto superior esquerdo */}
-          <div className="absolute top-3 left-3 z-30 flex items-center gap-1.5 bg-[#17120c]/90 border border-[#c8a962]/50 rounded-xl p-1 shadow-lg backdrop-blur-sm">
-            <button
-              type="button"
-              onClick={() => setIsNightMode((prev) => !prev)}
-              title={isNightMode ? 'Mudar para Dia' : 'Mudar para Noite'}
-              className={`px-2 py-1 rounded-lg text-[11px] font-semibold flex items-center gap-1.5 transition-colors ${
-                isNightMode
-                  ? 'bg-indigo-500/25 text-indigo-200'
-                  : 'text-amber-300 hover:bg-[#c8a962]/15'
-              }`}
-            >
-              {isNightMode ? <Moon className="w-3.5 h-3.5" /> : <Sun className="w-3.5 h-3.5" />}
-              <span>{isNightMode ? 'Noite' : 'Dia'}</span>
-            </button>
-          </div>
+          {/* Título Flutuante da Região no Modo Mapa Local (estilo foto do jogo) */}
+          {viewMode === 'local' ? (
+            <div className="absolute top-3 left-3 z-30 bg-[#17120c]/90 border border-[#c8a962]/55 rounded-xl px-3.5 py-2 shadow-lg backdrop-blur-md">
+              <div className="font-hylian text-sm sm:text-base font-bold text-[#f5ecd0] leading-tight">
+                {selectedZone.label}
+              </div>
+              <div className="flex items-center gap-3 mt-1 text-[11px] font-mono font-bold">
+                <span className="flex items-center gap-1 text-[#facc15]">
+                  <Bug className="w-3 h-3" />
+                  {selectedStats.collectedS}/{selectedStats.zSkulltulas.length}
+                </span>
+                <span className="flex items-center gap-1 text-red-400">
+                  <Heart className="w-3 h-3 fill-red-400" />
+                  {selectedStats.collectedH}/{selectedStats.zHearts.length}
+                </span>
+              </div>
+            </div>
+          ) : (
+            /* Botão Dia / Noite no canto superior esquerdo */
+            <div className="absolute top-3 left-3 z-30 flex items-center gap-1.5 bg-[#17120c]/90 border border-[#c8a962]/50 rounded-xl p-1 shadow-lg backdrop-blur-sm">
+              <button
+                type="button"
+                onClick={() => setIsNightMode((prev) => !prev)}
+                title={isNightMode ? 'Mudar para Dia' : 'Mudar para Noite'}
+                className={`px-2 py-1 rounded-lg text-[11px] font-semibold flex items-center gap-1.5 transition-colors ${
+                  isNightMode
+                    ? 'bg-indigo-500/25 text-indigo-200'
+                    : 'text-amber-300 hover:bg-[#c8a962]/15'
+                }`}
+              >
+                {isNightMode ? <Moon className="w-3.5 h-3.5" /> : <Sun className="w-3.5 h-3.5" />}
+                <span>{isNightMode ? 'Noite' : 'Dia'}</span>
+              </button>
+            </div>
+          )}
 
           {/* Controles de Visibilidade, Filtro e Zoom */}
           <div className="absolute top-3 right-3 z-30 flex flex-col items-end gap-2">
@@ -589,6 +639,17 @@ export const HyruleMap: React.FC<HyruleMapProps> = ({
                   <RotateCcw className="w-4 h-4" />
                 </button>
               )}
+
+              <span className="w-px h-4 bg-[#c8a962]/30 mx-0.5" />
+
+              <button
+                type="button"
+                onClick={() => setIsExpanded((prev) => !prev)}
+                title={isExpanded ? 'Sair da tela cheia (Esc)' : 'Ampliar mapa em tela cheia'}
+                className="p-1.5 rounded-lg text-[#f0d98c] hover:bg-[#c8a962]/20 transition-colors"
+              >
+                {isExpanded ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
+              </button>
             </div>
 
             {/* Popover de Filtro de Camadas */}
@@ -632,7 +693,7 @@ export const HyruleMap: React.FC<HyruleMapProps> = ({
                   );
                 })}
 
-                <div className="pt-1.5 border-t border-[#c8a962]/20">
+                <div className="pt-1.5 border-t border-[#c8a962]/20 space-y-1">
                   <button
                     type="button"
                     onClick={() => setHideCompletedZones((prev) => !prev)}
@@ -642,6 +703,21 @@ export const HyruleMap: React.FC<HyruleMapProps> = ({
                     <span
                       className={`w-7 h-4 rounded-full p-0.5 transition-colors flex items-center ${
                         hideCompletedZones ? 'bg-[#c8a962] justify-end' : 'bg-zinc-700 justify-start'
+                      }`}
+                    >
+                      <span className="w-3 h-3 rounded-full bg-white shadow" />
+                    </span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setShowFogClouds((prev) => !prev)}
+                    className="w-full flex items-center justify-between py-1 px-1.5 rounded-lg hover:bg-white/5 transition-colors"
+                  >
+                    <span className="text-zinc-300">Nuvens de pergaminho</span>
+                    <span
+                      className={`w-7 h-4 rounded-full p-0.5 transition-colors flex items-center ${
+                        showFogClouds ? 'bg-[#c8a962] justify-end' : 'bg-zinc-700 justify-start'
                       }`}
                     >
                       <span className="w-3 h-3 rounded-full bg-white shadow" />
@@ -690,8 +766,18 @@ export const HyruleMap: React.FC<HyruleMapProps> = ({
               />
             </div>
 
-            {/* Névoa suave nas bordas como no app oficial */}
-            <div className="absolute inset-0 pointer-events-none shadow-[inset_0_0_45px_rgba(24,18,12,0.75)]" />
+            {/* Névoa suave / Nuvens de borda como no mapa oficial do jogo */}
+            {showFogClouds && (
+              <div
+                aria-hidden="true"
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                  background:
+                    'radial-gradient(ellipse at 50% 48%, rgba(245,236,208,0) 52%, rgba(226,210,168,0.45) 78%, rgba(214,195,148,0.88) 96%)'
+                }}
+              />
+            )}
+            <div className="absolute inset-0 pointer-events-none shadow-[inset_0_0_45px_rgba(24,18,12,0.65)]" />
 
             {/* Sub-locais detalhados quando aproxima o zoom (>= 160%) */}
             {showPins &&
@@ -797,7 +883,7 @@ export const HyruleMap: React.FC<HyruleMapProps> = ({
           </div>
 
           {/* Atalho rápido para voltar à visão geral de Hyrule quando ampliado */}
-          {zoom > 1.2 && (
+          {zoom > 1.2 && viewMode === 'world' && (
             <button
               type="button"
               onClick={handleResetView}
@@ -805,6 +891,37 @@ export const HyruleMap: React.FC<HyruleMapProps> = ({
             >
               <RotateCcw className="w-3.5 h-3.5" />
               <span>Visão Geral de Hyrule</span>
+            </button>
+          )}
+
+          {/* Controle Inferior Direito Estilo Jogo: Mapa Local ↔ Miniatura Mapa-múndi */}
+          {viewMode === 'local' ? (
+            <button
+              type="button"
+              onClick={handleBackToWorldMap}
+              title="Voltar para o Mapa-múndi de Hyrule"
+              className="absolute bottom-3 right-3 z-30 group flex flex-col items-center gap-1 bg-[#17120c]/90 hover:bg-[#17120c] border border-[#c8a962]/70 rounded-xl p-1.5 shadow-xl backdrop-blur-sm transition-transform active:scale-95"
+            >
+              <div className="w-16 h-11 rounded-lg overflow-hidden border border-[#c8a962]/50">
+                <img
+                  src="/images/hyrule-map.jpg"
+                  alt="Miniatura Mapa-múndi"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                />
+              </div>
+              <span className="text-[10px] font-semibold text-[#f5ecd0] px-1">
+                Mapa-múndi
+              </span>
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={() => handleEnterLocalMap(selectedZone)}
+              title="Ampliar para o Mapa Local da região selecionada"
+              className="absolute bottom-3 right-3 z-30 px-3 py-1.5 rounded-xl bg-[#17120c]/90 hover:bg-[#231b12] border border-[#c8a962]/70 text-[11px] font-semibold text-[#f5ecd0] shadow-lg backdrop-blur-sm flex items-center gap-1.5 transition-all active:scale-95"
+            >
+              <Compass className="w-3.5 h-3.5 text-[#f0d98c]" />
+              <span>Mapa local: {selectedZone.label}</span>
             </button>
           )}
         </div>
